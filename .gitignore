@@ -1,0 +1,21 @@
+
+Output
+Debug
+Release
+*.exe
+*.ilk
+
+.vs
+x64
+*.aps
+*.pdb
+
+*.VC.db
+*.VC.opendb
+*.ipch
+
+*.vcxproj.user
+
+# https://github.com/ogamespec/dolwin/issues/129
+
+volatility
