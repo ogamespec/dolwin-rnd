@@ -405,11 +405,35 @@ namespace IntelAssemblerUnitTest
 			ClearInfo(info);
 		}
 
-		//TEST_METHOD(adc)
-		//{
-		//	uint8_t adcBytes1[] = { 0x14, 0xaa };
-		//	Check(IntelAssembler::adc<16>(Param::al, Param::imm8, 0, 0xaa), adcBytes1, sizeof(adcBytes1));
-		//}
+		/// <summary>
+		/// Tests a group of opcodes for an `adc` instruction.
+		/// Only basic testing is done to make sure the opcodes are correctly encoded.
+		/// ModRM addressing is verified in other tests.
+		/// </summary>
+		TEST_METHOD(adc)
+		{
+			// I
+			Check(IntelAssembler::adc<16>(Param::al, Param::imm8, 0, 0xaa), "\x14\xaa", 2);
+			Check(IntelAssembler::adc<16>(Param::ax, Param::imm16, 0, 0x1234), "\x15\x34\x12", 3);
+			Check(IntelAssembler::adc<16>(Param::eax, Param::imm32, 0, 0x12345678), "\x66\x15\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::adc<64>(Param::rax, Param::imm32, 0, 0x12345678), "\x48\x15\x78\x56\x34\x12", 6);
+
+			// MI
+
+			// MR
+			Check(IntelAssembler::adc<16>(Param::m_bp_di, Param::al, 0, 0), "\x10\x03", 2);
+			Check(IntelAssembler::adc<64>(Param::sib_r11_4_rdx, Param::r8b, 0, 0), "\x4E\x10\x04\x9a", 4);
+			Check(IntelAssembler::adc<16>(Param::m_bx, Param::ax, 0, 0), "\x11\x07", 2);
+			Check(IntelAssembler::adc<32>(Param::m_ebx, Param::eax, 0, 0), "\x11\x03", 2);
+			Check(IntelAssembler::adc<64>(Param::m_rbx, Param::rax, 0, 0), "\x48\x11\x03", 3);
+
+			// RM
+			Check(IntelAssembler::adc<16>(Param::al, Param::m_bp_di, 0, 0), "\x12\x03", 2);
+			Check(IntelAssembler::adc<64>(Param::r8b, Param::sib_r11_4_rdx, 0, 0), "\x4E\x12\x04\x9a", 4);
+			Check(IntelAssembler::adc<16>(Param::ax, Param::m_bx, 0, 0), "\x13\x07", 2);
+			Check(IntelAssembler::adc<32>(Param::eax, Param::m_ebx, 0, 0), "\x13\x03", 2);
+			Check(IntelAssembler::adc<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x13\x03", 3);
+		}
 
 		TEST_METHOD(nop)
 		{
