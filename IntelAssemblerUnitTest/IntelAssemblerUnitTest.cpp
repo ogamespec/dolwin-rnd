@@ -1646,13 +1646,9 @@ namespace IntelAssemblerUnitTest
 		{
 			// 16-bit
 
-			// arpl word ptr [bx + si], ax		"\x63\x00"
-
 			Check(IntelAssembler::arpl<16>(Param::m_bx_si, Param::ax, 0), "\x63\x00", 2);
 
 			// 32-bit
-
-			// arpl word ptr [bx + si], ax		"\x66\x67\x63\x00"
 
 			Check(IntelAssembler::arpl<32>(Param::m_bx_si, Param::ax, 0), "\x66\x67\x63\x00", 4);
 
@@ -1671,22 +1667,12 @@ namespace IntelAssemblerUnitTest
 		{
 			// 16-bit
 
-			// bound ax, word ptr [bx + si]		"\x62\x00"
-
 			Check(IntelAssembler::bound<16>(Param::ax, Param::m_bx_si, 0), "\x62\x00", 2);
-
-			// bound ecx, [eax]			"\x66\x67\x62\x08"
-
 			Check(IntelAssembler::bound<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x62\x08", 4);
 
 			// 32-bit
 
-			// bound ax, word ptr [bx + si]		"\x66\x67\x62\x00"
-
 			Check(IntelAssembler::bound<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x62\x00", 4);
-
-			// bound ecx, [eax]		"\x62\x08"
-
 			Check(IntelAssembler::bound<32>(Param::ecx, Param::m_eax, 0), "\x62\x08", 2);
 
 			// 64-bit -- Failed
@@ -1694,6 +1680,64 @@ namespace IntelAssemblerUnitTest
 			Assert::ExpectException<char const*>([]() {
 				IntelAssembler::bound<64>(Param::ax, Param::m_bx_si, 0);
 				});
+		}
+
+		TEST_METHOD(bsf)
+		{
+			Check(IntelAssembler::bsf<16>(Param::ax, Param::m_bx_si, 0), "\x0f\xbc\x00", 3);
+			Check(IntelAssembler::bsf<32>(Param::eax, Param::m_eax, 0), "\x0f\xbc\x00", 3);
+			Check(IntelAssembler::bsf<64>(Param::rax, Param::m_rax, 0), "\x48\x0f\xbc\x00", 4);
+		}
+
+		TEST_METHOD(bsr)
+		{
+			Check(IntelAssembler::bsr<16>(Param::ax, Param::m_bx_si, 0), "\x0f\xbd\x00", 3);
+			Check(IntelAssembler::bsr<32>(Param::eax, Param::m_eax, 0), "\x0f\xbd\x00", 3);
+			Check(IntelAssembler::bsr<64>(Param::rax, Param::m_rax, 0), "\x48\x0f\xbd\x00", 4);
+		}
+
+		TEST_METHOD(bt)
+		{
+			Check(IntelAssembler::bt<16>(Param::m_bx_si, Param::ax, 0), "\x0f\xa3\x00", 3);
+			Check(IntelAssembler::bt<32>(Param::m_eax, Param::eax, 0), "\x0f\xa3\x00", 3);
+			Check(IntelAssembler::bt<64>(Param::m_rax, Param::rax, 0), "\x48\x0f\xa3\x00", 4);
+
+			Check(IntelAssembler::bt<16>(Param::m_bx_si, Param::imm8, 0, 0xaa), "\x0f\xba\x20\xaa", 4);
+			Check(IntelAssembler::bt<32>(Param::m_eax, Param::imm8, 0, 0xaa), "\x0f\xba\x20\xaa", 4);
+			Check(IntelAssembler::bt<64>(Param::m_rax, Param::imm8, 0, 0xaa), "\x0f\xba\x20\xaa", 4);
+		}
+
+		TEST_METHOD(btc)
+		{
+			Check(IntelAssembler::btc<16>(Param::m_bx_si, Param::ax, 0), "\x0f\xbb\x00", 3);
+			Check(IntelAssembler::btc<32>(Param::m_eax, Param::eax, 0), "\x0f\xbb\x00", 3);
+			Check(IntelAssembler::btc<64>(Param::m_rax, Param::rax, 0), "\x48\x0f\xbb\x00", 4);
+
+			Check(IntelAssembler::btc<16>(Param::m_bx_si, Param::imm8, 0, 0xaa), "\x0f\xba\x38\xaa", 4);
+			Check(IntelAssembler::btc<32>(Param::m_eax, Param::imm8, 0, 0xaa), "\x0f\xba\x38\xaa", 4);
+			Check(IntelAssembler::btc<64>(Param::m_rax, Param::imm8, 0, 0xaa), "\x0f\xba\x38\xaa", 4);
+		}
+
+		TEST_METHOD(btr)
+		{
+			Check(IntelAssembler::btr<16>(Param::m_bx_si, Param::ax, 0), "\x0f\xb3\x00", 3);
+			Check(IntelAssembler::btr<32>(Param::m_eax, Param::eax, 0), "\x0f\xb3\x00", 3);
+			Check(IntelAssembler::btr<64>(Param::m_rax, Param::rax, 0), "\x48\x0f\xb3\x00", 4);
+
+			Check(IntelAssembler::btr<16>(Param::m_bx_si, Param::imm8, 0, 0xaa), "\x0f\xba\x30\xaa", 4);
+			Check(IntelAssembler::btr<32>(Param::m_eax, Param::imm8, 0, 0xaa), "\x0f\xba\x30\xaa", 4);
+			Check(IntelAssembler::btr<64>(Param::m_rax, Param::imm8, 0, 0xaa), "\x0f\xba\x30\xaa", 4);
+		}
+
+		TEST_METHOD(bts)
+		{
+			Check(IntelAssembler::bts<16>(Param::m_bx_si, Param::ax, 0), "\x0f\xab\x00", 3);
+			Check(IntelAssembler::bts<32>(Param::m_eax, Param::eax, 0), "\x0f\xab\x00", 3);
+			Check(IntelAssembler::bts<64>(Param::m_rax, Param::rax, 0), "\x48\x0f\xab\x00", 4);
+
+			Check(IntelAssembler::bts<16>(Param::m_bx_si, Param::imm8, 0, 0xaa), "\x0f\xba\x28\xaa", 4);
+			Check(IntelAssembler::bts<32>(Param::m_eax, Param::imm8, 0, 0xaa), "\x0f\xba\x28\xaa", 4);
+			Check(IntelAssembler::bts<64>(Param::m_rax, Param::imm8, 0, 0xaa), "\x0f\xba\x28\xaa", 4);
 		}
 
 		TEST_METHOD(nop)
