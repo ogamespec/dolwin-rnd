@@ -570,6 +570,260 @@ namespace IntelAssemblerUnitTest
 		}
 
 		/// <summary>
+		/// Testing ModRM/SIB addressing for 64-bit mode.
+		/// Same as 16-bit version - check favorite addressing options.
+		/// </summary>
+		TEST_METHOD(ModRegRm_64)
+		{
+			AnalyzeInfo info = { 0 };
+
+			// Register - Register
+
+			// adc ah, r12b   -- Fail
+
+			Assert::ExpectException<char const*>([]() {
+				AnalyzeInfo info = { 0 };
+				info.params[0] = Param::ah;
+				info.params[1] = Param::r12b;
+				info.numParams = 2;
+				IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+				});
+			ClearInfo(info);
+
+			// adc al, bl	"\x12\xc3"
+
+			info.params[0] = Param::al;
+			info.params[1] = Param::bl;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x12\xc3", 2);
+			ClearInfo(info);
+
+			// adc bpl, sil		"\x40\x12\xee"
+
+			info.params[0] = Param::bpl;
+			info.params[1] = Param::sil;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x40\x12\xee", 3);
+			ClearInfo(info);
+
+			// adc ax, bx	"\x66\x13\xc3"
+
+			info.params[0] = Param::ax;
+			info.params[1] = Param::bx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x66\x13\xc3", 3);
+			ClearInfo(info);
+
+			// adc r8w, r9w		"\x66\x45\x13\xc1"
+
+			info.params[0] = Param::r8w;
+			info.params[1] = Param::r9w;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x66\x45\x13\xc1", 4);
+			ClearInfo(info);
+
+			// adc eax, ebx		"\x13\xc3"
+
+			info.params[0] = Param::eax;
+			info.params[1] = Param::ebx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x13\xc3", 2);
+			ClearInfo(info);
+
+			// adc r8d, r9d		"\x45\x13\xc1"
+
+			info.params[0] = Param::r8d;
+			info.params[1] = Param::r9d;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x45\x13\xc1", 3);
+			ClearInfo(info);
+
+			// adc rax, rbx		"\x48\x13\xc3"
+
+			info.params[0] = Param::rax;
+			info.params[1] = Param::rbx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x48\x13\xc3", 3);
+			ClearInfo(info);
+
+			// Register - Memory16
+
+			// adc al, [bp + si + 0xaa]		-- Fail
+
+			Assert::ExpectException<char const*>([]() {
+				AnalyzeInfo info = { 0 };
+				info.params[0] = Param::al;
+				info.params[1] = Param::m_bp_si_disp8;
+				info.numParams = 2;
+				info.Disp.disp8 = 0xaa;
+				IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+				});
+			ClearInfo(info);
+
+			// Register - Memory32
+
+			// adc al, [ebx]		"\x67\x12\x03"
+
+			info.params[0] = Param::al;
+			info.params[1] = Param::m_ebx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x12\x03", 3);
+			ClearInfo(info);
+
+			// adc ax, [ebx]		"\x66\x67\x13\x03"
+
+			info.params[0] = Param::ax;
+			info.params[1] = Param::m_ebx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x66\x67\x13\x03", 4);
+			ClearInfo(info);
+
+			// adc eax, [ebx]		"\x67\x13\x03"
+
+			info.params[0] = Param::eax;
+			info.params[1] = Param::m_ebx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x13\x03", 3);
+			ClearInfo(info);
+
+			// adc r15, [ebx]		"\x67\x4c\x13\x3b"
+
+			info.params[0] = Param::r15;
+			info.params[1] = Param::m_ebx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x4c\x13\x3b", 4);
+			ClearInfo(info);
+
+			// adc r15d, [ebx]		"\x67\x44\x13\x3b"
+
+			info.params[0] = Param::r15d;
+			info.params[1] = Param::m_ebx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x44\x13\x3b", 4);
+			ClearInfo(info);
+
+			// adc sil, [ebx]		"\x67\x40\x12\x33"
+
+			info.params[0] = Param::sil;
+			info.params[1] = Param::m_ebx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x40\x12\x33", 4);
+			ClearInfo(info);
+
+			// adc r10w, [ebx]		"\x66\x67\x44\x13\x13"
+
+			info.params[0] = Param::r10w;
+			info.params[1] = Param::m_ebx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x66\x67\x44\x13\x13", 5);
+			ClearInfo(info);
+
+			// Register - Memory32 + SIB
+
+			// adc al, [ebp * 2 + 0x11223344]	"\x67\x12\x04\x6d\x44\x33\x22\x11"
+
+			info.params[0] = Param::al;
+			info.params[1] = Param::sib_ebp_2_disp32;
+			info.numParams = 2;
+			info.Disp.disp32 = 0x11223344;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x12\x04\x6d\x44\x33\x22\x11", 8);
+			ClearInfo(info);
+
+			// adc ax, [esi * 2 + edx]		"\x66\x67\x13\x04\x72"
+
+			info.params[0] = Param::ax;
+			info.params[1] = Param::sib_esi_2_edx;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x66\x67\x13\x04\x72", 5);
+			ClearInfo(info);
+
+			// adc eax, [esi * 2 + esi]			"\x67\x13\x04\x76"
+
+			info.params[0] = Param::eax;
+			info.params[1] = Param::sib_esi_2_esi;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x13\x04\x76", 4);
+			ClearInfo(info);
+
+			// adc eax, [r15d * 2 + r10d]		"\x67\x43\x13\x04\x7a"
+
+			info.params[0] = Param::eax;
+			info.params[1] = Param::sib_r15d_2_r10d;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x43\x13\x04\x7a", 5);
+			ClearInfo(info);
+
+			// Register - Memory64
+
+			// adc al, [rax]			"\x12\x00"
+
+			info.params[0] = Param::al;
+			info.params[1] = Param::m_rax;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x12\x00", 2);
+			ClearInfo(info);
+
+			// adc rax, [rip + 0x11223344]		"\x48\x13\x05\x44\x33\x22\x11"
+
+			info.params[0] = Param::rax;
+			info.params[1] = Param::m_rip_disp32;
+			info.numParams = 2;
+			info.Disp.disp32 = 0x11223344;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x48\x13\x05\x44\x33\x22\x11", 7);
+			ClearInfo(info);
+
+			// adc rax, [eip + 0x11223344]		"\x67\x48\x13\x05\x44\x33\x22\x11"
+
+			info.params[0] = Param::rax;
+			info.params[1] = Param::m_eip_disp32;
+			info.numParams = 2;
+			info.Disp.disp32 = 0x11223344;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x67\x48\x13\x05\x44\x33\x22\x11", 8);
+			ClearInfo(info);
+
+			// Register - Memory64 + SIB
+
+			// adc eax, [rax * 2 + rax]			"\x13\x04\x40"
+
+			info.params[0] = Param::eax;
+			info.params[1] = Param::sib_rax_2_rax;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x13\x04\x40", 2);
+			ClearInfo(info);
+
+			// adc spl, [r12 * 2 + rax]			"\x42\x12\x24\x60"
+
+			info.params[0] = Param::spl;
+			info.params[1] = Param::sib_r12_2_rax;
+			info.numParams = 2;
+			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
+			Check(info, "\x42\x12\x24\x60", 4);
+			ClearInfo(info);
+		}
+
+		/// <summary>
 		/// Tests a group of opcodes for an `adc` instruction.
 		/// Only basic testing is done to make sure the opcodes are correctly encoded.
 		/// ModRM addressing is verified in other tests.
@@ -586,7 +840,7 @@ namespace IntelAssemblerUnitTest
 
 			// MR
 			Check(IntelAssembler::adc<16>(Param::m_bp_di, Param::al, 0, 0), "\x10\x03", 2);
-			Check(IntelAssembler::adc<64>(Param::sib_r11_4_rdx, Param::r8b, 0, 0), "\x4E\x10\x04\x9a", 4);
+			Check(IntelAssembler::adc<64>(Param::sib_r11_4_rdx, Param::r8b, 0, 0), "\x46\x10\x04\x9a", 4);
 			Check(IntelAssembler::adc<16>(Param::m_bx, Param::ax, 0, 0), "\x11\x07", 2);
 			Check(IntelAssembler::adc<32>(Param::m_ebx, Param::eax, 0, 0), "\x11\x03", 2);
 			Check(IntelAssembler::adc<64>(Param::m_rbx, Param::rax, 0, 0), "\x48\x11\x03", 3);
@@ -594,7 +848,7 @@ namespace IntelAssemblerUnitTest
 
 			// RM
 			Check(IntelAssembler::adc<16>(Param::al, Param::m_bp_di, 0, 0), "\x12\x03", 2);
-			Check(IntelAssembler::adc<64>(Param::r8b, Param::sib_r11_4_rdx, 0, 0), "\x4E\x12\x04\x9a", 4);
+			Check(IntelAssembler::adc<64>(Param::r8b, Param::sib_r11_4_rdx, 0, 0), "\x46\x12\x04\x9a", 4);
 			Check(IntelAssembler::adc<16>(Param::ax, Param::m_bx, 0, 0), "\x13\x07", 2);
 			Check(IntelAssembler::adc<32>(Param::eax, Param::m_ebx, 0, 0), "\x13\x03", 2);
 			Check(IntelAssembler::adc<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x13\x03", 3);
