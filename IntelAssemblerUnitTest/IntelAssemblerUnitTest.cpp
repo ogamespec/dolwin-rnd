@@ -1642,6 +1642,60 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::_and<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x23\x03", 3);
 		}
 
+		TEST_METHOD(arpl)
+		{
+			// 16-bit
+
+			// arpl word ptr [bx + si], ax		"\x63\x00"
+
+			Check(IntelAssembler::arpl<16>(Param::m_bx_si, Param::ax, 0), "\x63\x00", 2);
+
+			// 32-bit
+
+			// arpl word ptr [bx + si], ax		"\x66\x67\x63\x00"
+
+			Check(IntelAssembler::arpl<32>(Param::m_bx_si, Param::ax, 0), "\x66\x67\x63\x00", 4);
+
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::arpl<64>(Param::m_eax, Param::eax, 0);
+				});
+
+			// 64-bit -- Failed
+
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::arpl<64>(Param::m_bx_si, Param::ax, 0);
+				});
+		}
+
+		TEST_METHOD(bound)
+		{
+			// 16-bit
+
+			// bound ax, word ptr [bx + si]		"\x62\x00"
+
+			Check(IntelAssembler::bound<16>(Param::ax, Param::m_bx_si, 0), "\x62\x00", 2);
+
+			// bound ecx, [eax]			"\x66\x67\x62\x08"
+
+			Check(IntelAssembler::bound<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x62\x08", 4);
+
+			// 32-bit
+
+			// bound ax, word ptr [bx + si]		"\x66\x67\x62\x00"
+
+			Check(IntelAssembler::bound<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x62\x00", 4);
+
+			// bound ecx, [eax]		"\x62\x08"
+
+			Check(IntelAssembler::bound<32>(Param::ecx, Param::m_eax, 0), "\x62\x08", 2);
+
+			// 64-bit -- Failed
+
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::bound<64>(Param::ax, Param::m_bx_si, 0);
+				});
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
