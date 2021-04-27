@@ -810,7 +810,7 @@ namespace IntelAssemblerUnitTest
 			info.params[1] = Param::sib_rax_2_rax;
 			info.numParams = 2;
 			IntelAssembler::HandleModRegRm(info, 64, 0, 1, 0x12, 0x13);
-			Check(info, "\x13\x04\x40", 2);
+			Check(info, "\x13\x04\x40", 3);
 			ClearInfo(info);
 
 			// adc spl, [r12 * 2 + rax]			"\x42\x12\x24\x60"
@@ -823,6 +823,146 @@ namespace IntelAssemblerUnitTest
 			ClearInfo(info);
 		}
 
+		/// <summary>
+		/// Instructions Form_MI testing that use ModRM and imm8/imm16/imm32/simm8 (16-bit)
+		/// </summary>
+		TEST_METHOD(ModRmImm_16)
+		{
+			AnalyzeInfo info = { 0 };
+
+			// Register - Imm
+
+			// adc cl, 0xaa			"\x80\xd1\xaa"
+
+			info.params[0] = Param::cl;
+			info.params[1] = Param::imm8;
+			info.numParams = 2;
+			info.Imm.uimm8 = 0xaa;
+			IntelAssembler::HandleModRmImm(info, 16, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x80\xd1\xaa", 3);
+			ClearInfo(info);
+
+			// adc cx, 0x1234	"\x81\xd1\x34\x12"
+
+			info.params[0] = Param::cx;
+			info.params[1] = Param::imm16;
+			info.numParams = 2;
+			info.Imm.uimm16 = 0x1234;
+			IntelAssembler::HandleModRmImm(info, 16, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x81\xd1\x34\x12", 4);
+			ClearInfo(info);
+
+			// adc ecx, 0x12345678	"\x66\x81\xd1\x78\x56\x34\x12"
+
+			info.params[0] = Param::ecx;
+			info.params[1] = Param::imm32;
+			info.numParams = 2;
+			info.Imm.uimm32 = 0x12345678;
+			IntelAssembler::HandleModRmImm(info, 16, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x66\x81\xd1\x78\x56\x34\x12", 7);
+			ClearInfo(info);
+
+			// adc rcx, 0x12345678	 -- Failed
+
+			Assert::ExpectException<char const*>([]() {
+				AnalyzeInfo info = { 0 };
+				info.params[0] = Param::rcx;
+				info.params[1] = Param::imm32;
+				info.numParams = 2;
+				info.Imm.uimm32 = 0x12345678;
+				IntelAssembler::HandleModRmImm(info, 16, 0x80, 0x81, 0x83, 2);
+				});
+			ClearInfo(info);
+
+			// adc cx, (signed)0xaa		"\x83\xd1\xaa"
+
+			info.params[0] = Param::cx;
+			info.params[1] = Param::simm8;
+			info.numParams = 2;
+			info.Imm.simm8 = -0x56;
+			IntelAssembler::HandleModRmImm(info, 16, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x83\xd1\xaa", 3);
+			ClearInfo(info);
+
+			// adc ecx, (signed)0xaa	"\x66\x83\xd1\xaa"
+
+			info.params[0] = Param::ecx;
+			info.params[1] = Param::simm8;
+			info.numParams = 2;
+			info.Imm.simm8 = -0x56;
+			IntelAssembler::HandleModRmImm(info, 16, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x66\x83\xd1\xaa", 4);
+			ClearInfo(info);
+
+			// adc rcx, (signed)0xaa  -- Failed
+
+			Assert::ExpectException<char const*>([]() {
+				AnalyzeInfo info = { 0 };
+				info.params[0] = Param::rcx;
+				info.params[1] = Param::simm8;
+				info.numParams = 2;
+				info.Imm.simm8 = -0x56;
+				IntelAssembler::HandleModRmImm(info, 16, 0x80, 0x81, 0x83, 2);
+				});
+			ClearInfo(info);
+
+			// Memory16 - Imm
+
+			// adc byte ptr [bx + si], 0xaa		"\x80\x10\xaa"
+
+			// adc word ptr [bx + si], 0x1234	"\x81\x10\x34\x12"
+
+			// adc dword ptr [bx + si], 0x12345678	"\x66\x81\x10\x78\x56\x34\x12"
+
+			// adc word ptr [bx + si], (signed)0xaa			"\x83\x10\xaa"
+
+			// adc dword ptr [bx + si], (signed)0xaa		"\x66\x83\x10\xaa"
+
+			// Memory32 - Imm
+
+			// adc byte ptr [eax], 0xaa			"\x67\x80\x10\xaa"
+
+			// adc word ptr [eax], 0x1234		"\x67\x81\x10\x34\x12"
+
+			// adc dword ptr [eax], 0x12345678	"\x66\x67\x81\x10\x78\x56\x34\x12"
+
+			// adc word ptr [eax], (signed)0xaa		"\x67\x83\x10\xaa"
+
+			// adc dword ptr [eax], (signed)0xaa	"\x66\x67\x83\x10\xaa"
+
+			// Memory32 + SIM - Imm
+
+			// adc byte ptr [eax * 2 + ecx], 0xaa		"\x67\x80\x14\x41\xaa"
+
+			// adc word ptr [eax * 2 + ecx], 0x1234			"\x67\x81\x14\x41\x34\x12"
+
+			// adc dword ptr [eax * 2 + ecx], 0x12345678		"\x66\x67\x81\x14\x41\x78\x56\x34\x12"
+
+			// adc word ptr [eax * 2 + ecx], (signed)0xaa	"\x67\x83\x14\x41\xaa"
+
+			// adc dword ptr [eax * 2 + ecx], (signed)0xaa	"\x67\x66\x83\x14\x41\xaa"
+
+			// Memory64 - Imm
+
+			// adc byte ptr [rax], 0xaa -- Failed
+
+		}
+
+		/// <summary>
+		/// Instructions Form_MI testing that use ModRM and imm8/imm16/imm32/simm8 (32-bit)
+		/// </summary>
+		TEST_METHOD(ModRmImm_32)
+		{
+
+		}
+
+		/// <summary>
+		/// Instructions Form_MI testing that use ModRM and imm8/imm16/imm32/simm8 (64-bit)
+		/// </summary>
+		TEST_METHOD(ModRmImm_64)
+		{
+
+		}
 		/// <summary>
 		/// Tests a group of opcodes for an `adc` instruction.
 		/// Only basic testing is done to make sure the opcodes are correctly encoded.
@@ -837,6 +977,13 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::adc<64>(Param::rax, Param::imm32, 0, 0x12345678), "\x48\x15\x78\x56\x34\x12", 6);
 
 			// MI
+			Check(IntelAssembler::adc<16>(Param::cl, Param::imm8, 0, 0xaa), "\x80\xd1\xaa", 3);
+			Check(IntelAssembler::adc<16>(Param::cx, Param::imm16, 0, 0x1234), "\x81\xd1\x34\x12", 4);
+			Check(IntelAssembler::adc<32>(Param::ecx, Param::imm32, 0, 0x12345678), "\x81\xd1\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::adc<64>(Param::rcx, Param::imm32, 0, 0x12345678), "\x48\x81\xd1\x78\x56\x34\x12", 7);
+			Check(IntelAssembler::adc<16>(Param::cx, Param::simm8, 0, -0x56), "\x83\xd1\xaa", 3);
+			Check(IntelAssembler::adc<32>(Param::ecx, Param::simm8, 0, -0x56), "\x83\xd1\xaa", 3);
+			Check(IntelAssembler::adc<64>(Param::rcx, Param::simm8, 0, -0x56), "\x48\x83\xd1\xaa", 4);
 
 			// MR
 			Check(IntelAssembler::adc<16>(Param::m_bp_di, Param::al, 0, 0), "\x10\x03", 2);
@@ -852,7 +999,6 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::adc<16>(Param::ax, Param::m_bx, 0, 0), "\x13\x07", 2);
 			Check(IntelAssembler::adc<32>(Param::eax, Param::m_ebx, 0, 0), "\x13\x03", 2);
 			Check(IntelAssembler::adc<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x13\x03", 3);
-
 		}
 
 		TEST_METHOD(nop)
