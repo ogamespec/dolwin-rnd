@@ -1343,53 +1343,193 @@ namespace IntelAssemblerUnitTest
 
 			// adc cl, 0xaa			"\x80\xd1\xaa"
 
+			info.params[0] = Param::cl;
+			info.params[1] = Param::imm8;
+			info.numParams = 2;
+			info.Imm.uimm8 = 0xaa;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x80\xd1\xaa", 3);
+			ClearInfo(info);
+
 			// adc cx, 0x1234		"\x66\x81\xd1\x34\x12"
+
+			info.params[0] = Param::cx;
+			info.params[1] = Param::imm16;
+			info.numParams = 2;
+			info.Imm.uimm16 = 0x1234;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x66\x81\xd1\x34\x12", 5);
+			ClearInfo(info);
 
 			// adc ecx, 0x12345678	"\x81\xd1\x78\x56\x34\x12"
 
+			info.params[0] = Param::ecx;
+			info.params[1] = Param::imm32;
+			info.numParams = 2;
+			info.Imm.uimm32 = 0x12345678;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x81\xd1\x78\x56\x34\x12", 6);
+			ClearInfo(info);
+
 			// adc rcx, 0x12345678		"\x48\x81\xd1\x78\x56\x34\x12"
+
+			info.params[0] = Param::rcx;
+			info.params[1] = Param::imm32;
+			info.numParams = 2;
+			info.Imm.uimm32 = 0x12345678;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x48\x81\xd1\x78\x56\x34\x12", 7);
+			ClearInfo(info);
 
 			// adc cx, (signed)0xaa		"\x66\x83\xd1\xaa"
 
+			info.params[0] = Param::cx;
+			info.params[1] = Param::simm8_as16;
+			info.numParams = 2;
+			info.Imm.simm8 = -0x56;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x66\x83\xd1\xaa", 4);
+			ClearInfo(info);
+
 			// adc ecx, (signed)0xaa	"\x83\xd1\xaa"
 
+			info.params[0] = Param::ecx;
+			info.params[1] = Param::simm8_as32;
+			info.numParams = 2;
+			info.Imm.simm8 = -0x56;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x83\xd1\xaa", 3);
+			ClearInfo(info);
+
 			// adc rcx, (signed)0xaa	"\x48\x83\xd1\xaa"
+
+			info.params[0] = Param::rcx;
+			info.params[1] = Param::simm8_as64;
+			info.numParams = 2;
+			info.Imm.simm8 = -0x56;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x48\x83\xd1\xaa", 4);
+			ClearInfo(info);
+
+			// adc sil, 0xaa		"\x40\x80\xd6\xaa"
+
+			info.params[0] = Param::sil;
+			info.params[1] = Param::imm8;
+			info.numParams = 2;
+			info.Imm.uimm8 = 0xaa;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x40\x80\xd6\xaa", 4);
+			ClearInfo(info);
+
+			// adc r11w, 0x1234		"\x66\x41\x81\xd3\x34\x12"
+
+			info.params[0] = Param::r11w;
+			info.params[1] = Param::imm16;
+			info.numParams = 2;
+			info.Imm.uimm16 = 0x1234;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x66\x41\x81\xd3\x34\x12", 6);
+			ClearInfo(info);
+
+			// adc r14d, 0x12345678		"\x41\x81\xd6\x78\x56\x34\x12"
+
+			info.params[0] = Param::r14d;
+			info.params[1] = Param::imm32;
+			info.numParams = 2;
+			info.Imm.uimm32 = 0x12345678;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x41\x81\xd6\x78\x56\x34\x12", 7);
+			ClearInfo(info);
 
 			// Memory16 - Imm
 
 			// adc byte ptr [bx + si], 0xaa	  -- Failed
 
+			Assert::ExpectException<char const*>([]() {
+				AnalyzeInfo info = { 0 };
+				info.params[0] = Param::m_bx_si;
+				info.params[1] = Param::imm8;
+				info.numParams = 2;
+				info.Imm.uimm8 = 0xaa;
+				IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+				});
+			ClearInfo(info);
+
 			// Memory32 - Imm
 
 			// adc byte ptr [eax], 0xaa		"\x67\x80\x10\xaa"
 
+			info.params[0] = Param::m_eax;
+			info.params[1] = Param::imm8;
+			info.numParams = 2;
+			info.Imm.uimm8 = 0xaa;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x67\x80\x10\xaa", 4);
+			ClearInfo(info);
+
 			// adc word ptr [eax], 0x1234		"\x66\x67\x81\x10\x34\x12"
+
+			info.params[0] = Param::m_eax;
+			info.params[1] = Param::imm16;
+			info.numParams = 2;
+			info.Imm.uimm16 = 0x1234;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x66\x67\x81\x10\x34\x12", 6);
+			ClearInfo(info);
 
 			// adc dword ptr [eax], 0x12345678	"\x67\x81\x10\x78\x56\x34\x12"
 
+			info.params[0] = Param::m_eax;
+			info.params[1] = Param::imm32;
+			info.numParams = 2;
+			info.Imm.uimm32 = 0x12345678;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x67\x81\x10\x78\x56\x34\x12", 7);
+			ClearInfo(info);
+
 			// adc word ptr [eax], (signed)0xaa		"\x66\x67\x83\x10\xaa"
+
+			info.params[0] = Param::m_eax;
+			info.params[1] = Param::simm8_as16;
+			info.numParams = 2;
+			info.Imm.simm8 = -0x56;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x66\x67\x83\x10\xaa", 5);
+			ClearInfo(info);
 
 			// adc dword ptr [eax], (signed)0xaa	"\x67\x83\x10\xaa"
 
-			// Memory32 + SIM - Imm
-
-			// adc byte ptr [eax * 2 + ecx], 0xaa	"\x67\x80\x14\x41\xaa"
-
-			// adc word ptr [eax * 2 + ecx], 0x1234 "\x66\x67\x81\x14\x41\x34\x12"
-
-			// adc dword ptr [eax * 2 + ecx], 0x12345678	"\x67\x81\x14\x41\x78\x56\x34\x12"
-
-			// adc word ptr [eax * 2 + ecx], (signed)0xaa	"\x66\x67\x83\x14\x41\xaa"
-
-			// adc dword ptr [eax * 2 + ecx], (signed)0xaa	"\x67\x83\x14\x41\xaa"
+			info.params[0] = Param::m_eax;
+			info.params[1] = Param::simm8_as32;
+			info.numParams = 2;
+			info.Imm.simm8 = -0x56;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x67\x83\x10\xaa", 4);
+			ClearInfo(info);
 
 			// Memory64 - Imm
 
 			// adc byte ptr [rax], 0xaa			"\x80\x10\xaa"
 
+			info.params[0] = Param::m_rax;
+			info.params[1] = Param::imm8;
+			info.numParams = 2;
+			info.Imm.uimm8 = 0xaa;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x80\x10\xaa", 3);
+			ClearInfo(info);
+
 			// Memory64 + SIB - Imm
 			
 			// adc byte ptr [r15 * 2 + r14], 0xaa	"\x43\x80\x14\x7e\xaa"
+
+			info.params[0] = Param::sib_r15_2_r14;
+			info.params[1] = Param::imm8;
+			info.numParams = 2;
+			info.Imm.uimm8 = 0xaa;
+			IntelAssembler::HandleModRmImm(info, 64, 0x80, 0x81, 0x83, 2);
+			Check(info, "\x43\x80\x14\x7e\xaa", 5);
+			ClearInfo(info);
 		}
 
 		/// <summary>
