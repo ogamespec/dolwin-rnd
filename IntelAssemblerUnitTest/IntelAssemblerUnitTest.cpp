@@ -1570,6 +1570,78 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::adc<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x13\x03", 3);
 		}
 
+		/// <summary>
+		/// Tests a group of opcodes for an `add` instruction.
+		/// </summary>
+		TEST_METHOD(add)
+		{
+			// I
+			Check(IntelAssembler::add<16>(Param::al, Param::imm8, 0, 0xaa), "\x04\xaa", 2);
+			Check(IntelAssembler::add<16>(Param::ax, Param::imm16, 0, 0x1234), "\x05\x34\x12", 3);
+			Check(IntelAssembler::add<16>(Param::eax, Param::imm32, 0, 0x12345678), "\x66\x05\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::add<64>(Param::rax, Param::imm32, 0, 0x12345678), "\x48\x05\x78\x56\x34\x12", 6);
+
+			// MI
+			Check(IntelAssembler::add<16>(Param::cl, Param::imm8, 0, 0xaa), "\x80\xc1\xaa", 3);
+			Check(IntelAssembler::add<16>(Param::cx, Param::imm16, 0, 0x1234), "\x81\xc1\x34\x12", 4);
+			Check(IntelAssembler::add<32>(Param::ecx, Param::imm32, 0, 0x12345678), "\x81\xc1\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::add<64>(Param::rcx, Param::imm32, 0, 0x12345678), "\x48\x81\xc1\x78\x56\x34\x12", 7);
+			Check(IntelAssembler::add<16>(Param::cx, Param::simm8_as16, 0, -0x56), "\x83\xc1\xaa", 3);
+			Check(IntelAssembler::add<32>(Param::ecx, Param::simm8_as32, 0, -0x56), "\x83\xc1\xaa", 3);
+			Check(IntelAssembler::add<64>(Param::rcx, Param::simm8_as64, 0, -0x56), "\x48\x83\xc1\xaa", 4);
+
+			// MR
+			Check(IntelAssembler::add<16>(Param::m_bp_di, Param::al, 0, 0), "\x00\x03", 2);
+			Check(IntelAssembler::add<64>(Param::sib_r11_4_rdx, Param::r8b, 0, 0), "\x46\x00\x04\x9a", 4);
+			Check(IntelAssembler::add<16>(Param::m_bx, Param::ax, 0, 0), "\x01\x07", 2);
+			Check(IntelAssembler::add<32>(Param::m_ebx, Param::eax, 0, 0), "\x01\x03", 2);
+			Check(IntelAssembler::add<64>(Param::m_rbx, Param::rax, 0, 0), "\x48\x01\x03", 3);
+			Check(IntelAssembler::add<64>(Param::m_eax, Param::rax, 0, 0), "\x67\x48\x01\x00", 4);
+
+			// RM
+			Check(IntelAssembler::add<16>(Param::al, Param::m_bp_di, 0, 0), "\x02\x03", 2);
+			Check(IntelAssembler::add<64>(Param::r8b, Param::sib_r11_4_rdx, 0, 0), "\x46\x02\x04\x9a", 4);
+			Check(IntelAssembler::add<16>(Param::ax, Param::m_bx, 0, 0), "\x03\x07", 2);
+			Check(IntelAssembler::add<32>(Param::eax, Param::m_ebx, 0, 0), "\x03\x03", 2);
+			Check(IntelAssembler::add<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x03\x03", 3);
+		}
+
+		/// <summary>
+		/// Tests a group of opcodes for an `and` instruction.
+		/// </summary>
+		TEST_METHOD(_and)
+		{
+			// I
+			Check(IntelAssembler::_and<16>(Param::al, Param::imm8, 0, 0xaa), "\x24\xaa", 2);
+			Check(IntelAssembler::_and<16>(Param::ax, Param::imm16, 0, 0x1234), "\x25\x34\x12", 3);
+			Check(IntelAssembler::_and<16>(Param::eax, Param::imm32, 0, 0x12345678), "\x66\x25\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::_and<64>(Param::rax, Param::imm32, 0, 0x12345678), "\x48\x25\x78\x56\x34\x12", 6);
+
+			// MI
+			Check(IntelAssembler::_and<16>(Param::cl, Param::imm8, 0, 0xaa), "\x80\xe1\xaa", 3);
+			Check(IntelAssembler::_and<16>(Param::cx, Param::imm16, 0, 0x1234), "\x81\xe1\x34\x12", 4);
+			Check(IntelAssembler::_and<32>(Param::ecx, Param::imm32, 0, 0x12345678), "\x81\xe1\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::_and<64>(Param::rcx, Param::imm32, 0, 0x12345678), "\x48\x81\xe1\x78\x56\x34\x12", 7);
+			Check(IntelAssembler::_and<16>(Param::cx, Param::simm8_as16, 0, -0x56), "\x83\xe1\xaa", 3);
+			Check(IntelAssembler::_and<32>(Param::ecx, Param::simm8_as32, 0, -0x56), "\x83\xe1\xaa", 3);
+			Check(IntelAssembler::_and<64>(Param::rcx, Param::simm8_as64, 0, -0x56), "\x48\x83\xe1\xaa", 4);
+
+			// MR
+			Check(IntelAssembler::_and<16>(Param::m_bp_di, Param::al, 0, 0), "\x20\x03", 2);
+			Check(IntelAssembler::_and<64>(Param::sib_r11_4_rdx, Param::r8b, 0, 0), "\x46\x20\x04\x9a", 4);
+			Check(IntelAssembler::_and<16>(Param::m_bx, Param::ax, 0, 0), "\x21\x07", 2);
+			Check(IntelAssembler::_and<32>(Param::m_ebx, Param::eax, 0, 0), "\x21\x03", 2);
+			Check(IntelAssembler::_and<64>(Param::m_rbx, Param::rax, 0, 0), "\x48\x21\x03", 3);
+			Check(IntelAssembler::_and<64>(Param::m_eax, Param::rax, 0, 0), "\x67\x48\x21\x00", 4);
+
+			// RM
+			Check(IntelAssembler::_and<16>(Param::al, Param::m_bp_di, 0, 0), "\x22\x03", 2);
+			Check(IntelAssembler::_and<64>(Param::r8b, Param::sib_r11_4_rdx, 0, 0), "\x46\x22\x04\x9a", 4);
+			Check(IntelAssembler::_and<16>(Param::ax, Param::m_bx, 0, 0), "\x23\x07", 2);
+			Check(IntelAssembler::_and<32>(Param::eax, Param::m_ebx, 0, 0), "\x23\x03", 2);
+			Check(IntelAssembler::_and<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x23\x03", 3);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
