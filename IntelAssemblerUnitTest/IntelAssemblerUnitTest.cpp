@@ -1827,6 +1827,37 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::cmpxchg<64>(Param::m_eax, Param::rax, 0), "\x67\x48\x0f\xb1\x00", 5);
 		}
 
+		TEST_METHOD(dec)
+		{
+			// M
+			Check(IntelAssembler::dec<16>(Param::m_bp_di, PtrHint::BytePtr), "\xfe\x0b", 2);
+			Check(IntelAssembler::dec<16>(Param::m_bp_di, PtrHint::WordPtr), "\xff\x0b", 2);
+			Check(IntelAssembler::dec<16>(Param::m_eax, PtrHint::WordPtr), "\x67\xff\x08", 3);
+			Check(IntelAssembler::dec<16>(Param::m_eax, PtrHint::DwordPtr), "\x66\x67\xff\x08", 4);
+
+			Check(IntelAssembler::dec<32>(Param::m_bp_di, PtrHint::BytePtr), "\x67\xfe\x0b", 3);
+			Check(IntelAssembler::dec<32>(Param::m_bp_di, PtrHint::WordPtr), "\x66\x67\xff\x0b", 4);
+			Check(IntelAssembler::dec<32>(Param::m_eax, PtrHint::WordPtr), "\x66\xff\x08", 3);
+			Check(IntelAssembler::dec<32>(Param::m_eax, PtrHint::DwordPtr), "\xff\x08", 2);
+
+			Check(IntelAssembler::dec<64>(Param::m_eax, PtrHint::BytePtr), "\x67\xfe\x08", 3);
+			Check(IntelAssembler::dec<64>(Param::m_eax, PtrHint::WordPtr), "\x66\x67\xff\x08", 4);
+			Check(IntelAssembler::dec<64>(Param::m_eax, PtrHint::DwordPtr), "\x67\xff\x08", 3);
+			Check(IntelAssembler::dec<64>(Param::m_eax, PtrHint::QwordPtr), "\x67\x48\xff\x08", 4);
+			Check(IntelAssembler::dec<64>(Param::m_rax, PtrHint::BytePtr), "\xfe\x08", 2);
+			Check(IntelAssembler::dec<64>(Param::m_rax, PtrHint::WordPtr), "\x66\xff\x08", 3);
+			Check(IntelAssembler::dec<64>(Param::m_rax, PtrHint::DwordPtr), "\xff\x08", 2);
+			Check(IntelAssembler::dec<64>(Param::m_rax, PtrHint::QwordPtr), "\x48\xff\x08", 3);
+
+			// O
+			Check(IntelAssembler::dec<16>(Param::ax), "\x48", 1);
+			Check(IntelAssembler::dec<32>(Param::ax), "\x66\x48", 2);
+			Check(IntelAssembler::dec<16>(Param::eax), "\x66\x48", 2);
+			Check(IntelAssembler::dec<32>(Param::eax), "\x48", 1);
+			Check(IntelAssembler::dec<64>(Param::ax), "\x66\xff\xc8", 3);
+			Check(IntelAssembler::dec<64>(Param::eax), "\xff\xc8", 2);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
