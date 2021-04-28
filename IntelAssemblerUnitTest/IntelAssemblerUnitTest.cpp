@@ -1740,6 +1740,50 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::bts<64>(Param::m_rax, Param::imm8, 0, 0xaa), "\x0f\xba\x28\xaa", 4);
 		}
 
+		TEST_METHOD(call)
+		{
+			// Rel16, Rel32
+			Check(IntelAssembler::call<16>(Param::rel16, 0x1234), "\xe8\x34\x12", 3);
+			Check(IntelAssembler::call<32>(Param::rel16, 0x1234), "\x66\xe8\x34\x12", 4);
+			Check(IntelAssembler::call<16>(Param::rel32, 0x12345678), "\x66\xe8\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::call<32>(Param::rel32, 0x12345678), "\xe8\x78\x56\x34\x12", 5);
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::call<64>(Param::rel16, 0x1234);
+				});
+			Check(IntelAssembler::call<64>(Param::rel32, 0x12345678), "\xe8\x78\x56\x34\x12", 5);
+
+			// M
+			Check(IntelAssembler::call<16>(Param::m_bx_si), "\xff\x10", 2);
+			Check(IntelAssembler::call<32>(Param::m_bx_si), "\x67\xff\x10", 3);
+			Check(IntelAssembler::call<16>(Param::m_eax), "\x67\xff\x10", 3);
+			Check(IntelAssembler::call<32>(Param::m_eax), "\xff\x10", 2);
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::call<64>(Param::m_bx_si);
+				});
+			Check(IntelAssembler::call<64>(Param::m_eax), "\x67\xff\x10", 3);
+			Check(IntelAssembler::call<64>(Param::m_rax), "\xff\x10", 2);
+		}
+
+		TEST_METHOD(callf)
+		{
+			// D
+			Check(IntelAssembler::callf<16>(Param::farptr16, 0x1234, 0x1234), "\x9a\x34\x12\x34\x12", 5);
+			Check(IntelAssembler::callf<32>(Param::farptr16, 0x1234, 0x1234), "\x66\x9a\x34\x12\x34\x12", 6);
+			Check(IntelAssembler::callf<16>(Param::farptr32, 0x1234, 0x12345678), "\x66\x9a\x78\x56\x34\x12\x34\x12", 8);
+			Check(IntelAssembler::callf<32>(Param::farptr32, 0x1234, 0x12345678), "\x9a\x78\x56\x34\x12\x34\x12", 7);
+
+			// M
+			Check(IntelAssembler::callf<16>(Param::m_bx_si), "\xff\x18", 2);
+			Check(IntelAssembler::callf<32>(Param::m_bx_si), "\x67\xff\x18", 3);
+			Check(IntelAssembler::callf<16>(Param::m_eax), "\x67\xff\x18", 3);
+			Check(IntelAssembler::callf<32>(Param::m_eax), "\xff\x18", 2);
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::callf<64>(Param::m_bx_si);
+				});
+			Check(IntelAssembler::callf<64>(Param::m_eax), "\x67\xff\x18", 3);
+			Check(IntelAssembler::callf<64>(Param::m_rax), "\xff\x18", 2);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
