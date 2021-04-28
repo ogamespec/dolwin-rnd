@@ -1784,6 +1784,49 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::callf<64>(Param::m_rax), "\xff\x18", 2);
 		}
 
+		TEST_METHOD(cmp)
+		{
+			// I
+			Check(IntelAssembler::cmp<16>(Param::al, Param::imm8, 0, 0xaa), "\x3C\xaa", 2);
+			Check(IntelAssembler::cmp<16>(Param::ax, Param::imm16, 0, 0x1234), "\x3D\x34\x12", 3);
+			Check(IntelAssembler::cmp<16>(Param::eax, Param::imm32, 0, 0x12345678), "\x66\x3D\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::cmp<64>(Param::rax, Param::imm32, 0, 0x12345678), "\x48\x3D\x78\x56\x34\x12", 6);
+
+			// MI
+			Check(IntelAssembler::cmp<16>(Param::cl, Param::imm8, 0, 0xaa), "\x80\xf9\xaa", 3);
+			Check(IntelAssembler::cmp<16>(Param::cx, Param::imm16, 0, 0x1234), "\x81\xf9\x34\x12", 4);
+			Check(IntelAssembler::cmp<32>(Param::ecx, Param::imm32, 0, 0x12345678), "\x81\xf9\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::cmp<64>(Param::rcx, Param::imm32, 0, 0x12345678), "\x48\x81\xf9\x78\x56\x34\x12", 7);
+			Check(IntelAssembler::cmp<16>(Param::cx, Param::simm8_as16, 0, -0x56), "\x83\xf9\xaa", 3);
+			Check(IntelAssembler::cmp<32>(Param::ecx, Param::simm8_as32, 0, -0x56), "\x83\xf9\xaa", 3);
+			Check(IntelAssembler::cmp<64>(Param::rcx, Param::simm8_as64, 0, -0x56), "\x48\x83\xf9\xaa", 4);
+
+			// MR
+			Check(IntelAssembler::cmp<16>(Param::m_bp_di, Param::al, 0, 0), "\x38\x03", 2);
+			Check(IntelAssembler::cmp<64>(Param::sib_r11_4_rdx, Param::r8b, 0, 0), "\x46\x38\x04\x9a", 4);
+			Check(IntelAssembler::cmp<16>(Param::m_bx, Param::ax, 0, 0), "\x39\x07", 2);
+			Check(IntelAssembler::cmp<32>(Param::m_ebx, Param::eax, 0, 0), "\x39\x03", 2);
+			Check(IntelAssembler::cmp<64>(Param::m_rbx, Param::rax, 0, 0), "\x48\x39\x03", 3);
+			Check(IntelAssembler::cmp<64>(Param::m_eax, Param::rax, 0, 0), "\x67\x48\x39\x00", 4);
+
+			// RM
+			Check(IntelAssembler::cmp<16>(Param::al, Param::m_bp_di, 0, 0), "\x3a\x03", 2);
+			Check(IntelAssembler::cmp<64>(Param::r8b, Param::sib_r11_4_rdx, 0, 0), "\x46\x3a\x04\x9a", 4);
+			Check(IntelAssembler::cmp<16>(Param::ax, Param::m_bx, 0, 0), "\x3b\x07", 2);
+			Check(IntelAssembler::cmp<32>(Param::eax, Param::m_ebx, 0, 0), "\x3b\x03", 2);
+			Check(IntelAssembler::cmp<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x3b\x03", 3);
+		}
+
+		TEST_METHOD(cmpxchg)
+		{
+			Check(IntelAssembler::cmpxchg<16>(Param::m_bp_di, Param::al, 0), "\x0f\xb0\x03", 3);
+			Check(IntelAssembler::cmpxchg<64>(Param::sib_r11_4_rdx, Param::r8b, 0), "\x46\x0f\xb0\x04\x9a", 5);
+			Check(IntelAssembler::cmpxchg<16>(Param::m_bx, Param::ax, 0), "\x0f\xb1\x07", 3);
+			Check(IntelAssembler::cmpxchg<32>(Param::m_ebx, Param::eax, 0), "\x0f\xb1\x03", 3);
+			Check(IntelAssembler::cmpxchg<64>(Param::m_rbx, Param::rax, 0), "\x48\x0f\xb1\x03", 4);
+			Check(IntelAssembler::cmpxchg<64>(Param::m_eax, Param::rax, 0), "\x67\x48\x0f\xb1\x00", 5);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
