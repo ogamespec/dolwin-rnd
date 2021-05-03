@@ -1938,6 +1938,37 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::imul<64>(Param::rcx, Param::m_rax, Param::imm32, 0, 0x12345678), "\x48\x69\x08\x78\x56\x34\x12", 7);
 		}
 
+		TEST_METHOD(inc)
+		{
+			// M
+			Check(IntelAssembler::inc<16>(Param::m_bp_di, PtrHint::BytePtr), "\xfe\x03", 2);
+			Check(IntelAssembler::inc<16>(Param::m_bp_di, PtrHint::WordPtr), "\xff\x03", 2);
+			Check(IntelAssembler::inc<16>(Param::m_eax, PtrHint::WordPtr), "\x67\xff\x00", 3);
+			Check(IntelAssembler::inc<16>(Param::m_eax, PtrHint::DwordPtr), "\x66\x67\xff\x00", 4);
+
+			Check(IntelAssembler::inc<32>(Param::m_bp_di, PtrHint::BytePtr), "\x67\xfe\x03", 3);
+			Check(IntelAssembler::inc<32>(Param::m_bp_di, PtrHint::WordPtr), "\x66\x67\xff\x03", 4);
+			Check(IntelAssembler::inc<32>(Param::m_eax, PtrHint::WordPtr), "\x66\xff\x00", 3);
+			Check(IntelAssembler::inc<32>(Param::m_eax, PtrHint::DwordPtr), "\xff\x00", 2);
+
+			Check(IntelAssembler::inc<64>(Param::m_eax, PtrHint::BytePtr), "\x67\xfe\x00", 3);
+			Check(IntelAssembler::inc<64>(Param::m_eax, PtrHint::WordPtr), "\x66\x67\xff\x00", 4);
+			Check(IntelAssembler::inc<64>(Param::m_eax, PtrHint::DwordPtr), "\x67\xff\x00", 3);
+			Check(IntelAssembler::inc<64>(Param::m_eax, PtrHint::QwordPtr), "\x67\x48\xff\x00", 4);
+			Check(IntelAssembler::inc<64>(Param::m_rax, PtrHint::BytePtr), "\xfe\x00", 2);
+			Check(IntelAssembler::inc<64>(Param::m_rax, PtrHint::WordPtr), "\x66\xff\x00", 3);
+			Check(IntelAssembler::inc<64>(Param::m_rax, PtrHint::DwordPtr), "\xff\x00", 2);
+			Check(IntelAssembler::inc<64>(Param::m_rax, PtrHint::QwordPtr), "\x48\xff\x00", 3);
+
+			// O
+			Check(IntelAssembler::inc<16>(Param::ax), "\x40", 1);
+			Check(IntelAssembler::inc<32>(Param::ax), "\x66\x40", 2);
+			Check(IntelAssembler::inc<16>(Param::eax), "\x66\x40", 2);
+			Check(IntelAssembler::inc<32>(Param::eax), "\x40", 1);
+			Check(IntelAssembler::inc<64>(Param::ax), "\x66\xff\xc0", 3);
+			Check(IntelAssembler::inc<64>(Param::eax), "\xff\xc0", 2);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
