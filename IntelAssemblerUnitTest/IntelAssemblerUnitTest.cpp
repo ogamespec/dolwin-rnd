@@ -1902,6 +1902,42 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::idiv<64>(Param::m_rax, PtrHint::QwordPtr), "\x48\xf7\x38", 3);
 		}
 
+		TEST_METHOD(imul)
+		{
+			// M
+			Check(IntelAssembler::imul<16>(Param::m_bp_di, PtrHint::BytePtr), "\xf6\x2b", 2);
+			Check(IntelAssembler::imul<16>(Param::m_bp_di, PtrHint::WordPtr), "\xf7\x2b", 2);
+			Check(IntelAssembler::imul<16>(Param::m_eax, PtrHint::WordPtr), "\x67\xf7\x28", 3);
+			Check(IntelAssembler::imul<16>(Param::m_eax, PtrHint::DwordPtr), "\x66\x67\xf7\x28", 4);
+
+			Check(IntelAssembler::imul<32>(Param::m_bp_di, PtrHint::BytePtr), "\x67\xf6\x2b", 3);
+			Check(IntelAssembler::imul<32>(Param::m_bp_di, PtrHint::WordPtr), "\x66\x67\xf7\x2b", 4);
+			Check(IntelAssembler::imul<32>(Param::m_eax, PtrHint::WordPtr), "\x66\xf7\x28", 3);
+			Check(IntelAssembler::imul<32>(Param::m_eax, PtrHint::DwordPtr), "\xf7\x28", 2);
+
+			Check(IntelAssembler::imul<64>(Param::m_eax, PtrHint::BytePtr), "\x67\xf6\x28", 3);
+			Check(IntelAssembler::imul<64>(Param::m_eax, PtrHint::WordPtr), "\x66\x67\xf7\x28", 4);
+			Check(IntelAssembler::imul<64>(Param::m_eax, PtrHint::DwordPtr), "\x67\xf7\x28", 3);
+			Check(IntelAssembler::imul<64>(Param::m_eax, PtrHint::QwordPtr), "\x67\x48\xf7\x28", 4);
+			Check(IntelAssembler::imul<64>(Param::m_rax, PtrHint::BytePtr), "\xf6\x28", 2);
+			Check(IntelAssembler::imul<64>(Param::m_rax, PtrHint::WordPtr), "\x66\xf7\x28", 3);
+			Check(IntelAssembler::imul<64>(Param::m_rax, PtrHint::DwordPtr), "\xf7\x28", 2);
+			Check(IntelAssembler::imul<64>(Param::m_rax, PtrHint::QwordPtr), "\x48\xf7\x28", 3);
+
+			// RM
+			Check(IntelAssembler::imul<16>(Param::cx, Param::m_bp_di), "\x0f\xaf\x0b", 3);
+			Check(IntelAssembler::imul<32>(Param::ecx, Param::m_eax), "\x0f\xaf\x08", 3);
+			Check(IntelAssembler::imul<64>(Param::rcx, Param::m_rax), "\x48\x0f\xaf\x08", 4);
+
+			// RMI
+			Check(IntelAssembler::imul<16>(Param::cx, Param::m_bp_di, Param::imm8, 0, 0xaa), "\x6b\x0b\xaa", 3);
+			Check(IntelAssembler::imul<32>(Param::ecx, Param::m_eax, Param::imm8, 0, 0xaa), "\x6b\x08\xaa", 3);
+			Check(IntelAssembler::imul<64>(Param::rcx, Param::m_rax, Param::imm8, 0, 0xaa), "\x48\x6b\x08\xaa", 4);
+			Check(IntelAssembler::imul<16>(Param::cx, Param::m_bp_di, Param::imm16, 0, 0x1234), "\x69\x0b\x34\x12", 4);
+			Check(IntelAssembler::imul<32>(Param::ecx, Param::m_eax, Param::imm32, 0, 0x12345678), "\x69\x08\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::imul<64>(Param::rcx, Param::m_rax, Param::imm32, 0, 0x12345678), "\x48\x69\x08\x78\x56\x34\x12", 7);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
