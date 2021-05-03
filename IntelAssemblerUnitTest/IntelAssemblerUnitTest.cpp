@@ -2107,18 +2107,10 @@ namespace IntelAssemblerUnitTest
 
 		TEST_METHOD(lfs)
 		{
-			// 16-bit
-
 			Check(IntelAssembler::lfs<16>(Param::ax, Param::m_bx_si, 0), "\x0f\xb4\x00", 3);
 			Check(IntelAssembler::lfs<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x0f\xb4\x08", 5);
-
-			// 32-bit
-
 			Check(IntelAssembler::lfs<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x0f\xb4\x00", 5);
 			Check(IntelAssembler::lfs<32>(Param::ecx, Param::m_eax, 0), "\x0f\xb4\x08", 3);
-
-			// 64-bit
-
 			Check(IntelAssembler::lfs<64>(Param::rcx, Param::m_rax, 0), "\x48\x0f\xb4\x08", 4);
 		}
 
@@ -2131,18 +2123,10 @@ namespace IntelAssemblerUnitTest
 
 		TEST_METHOD(lgs)
 		{
-			// 16-bit
-
 			Check(IntelAssembler::lgs<16>(Param::ax, Param::m_bx_si, 0), "\x0f\xb5\x00", 3);
 			Check(IntelAssembler::lgs<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x0f\xb5\x08", 5);
-
-			// 32-bit
-
 			Check(IntelAssembler::lgs<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x0f\xb5\x00", 5);
 			Check(IntelAssembler::lgs<32>(Param::ecx, Param::m_eax, 0), "\x0f\xb5\x08", 3);
-
-			// 64-bit
-
 			Check(IntelAssembler::lgs<64>(Param::rcx, Param::m_rax, 0), "\x48\x0f\xb5\x08", 4);
 		}
 
@@ -2151,6 +2135,59 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::lidt<16>(Param::m_bx_si), "\x0f\x01\x18", 3);
 			Check(IntelAssembler::lidt<32>(Param::m_eax), "\x0f\x01\x18", 3);
 			Check(IntelAssembler::lidt<64>(Param::m_rax), "\x0f\x01\x18", 3);
+		}
+
+		TEST_METHOD(lldt)
+		{
+			Check(IntelAssembler::lldt<16>(Param::m_bx_si), "\x0f\x00\x10", 3);
+			Check(IntelAssembler::lldt<32>(Param::m_eax), "\x0f\x00\x10", 3);
+			Check(IntelAssembler::lldt<64>(Param::m_rax), "\x0f\x00\x10", 3);
+		}
+
+		TEST_METHOD(lmsw)
+		{
+			Check(IntelAssembler::lmsw<16>(Param::m_bx_si), "\x0f\x01\x30", 3);
+			Check(IntelAssembler::lmsw<32>(Param::m_eax), "\x0f\x01\x30", 3);
+			Check(IntelAssembler::lmsw<64>(Param::m_rax), "\x0f\x01\x30", 3);
+		}
+
+		TEST_METHOD(lsl)
+		{
+			Check(IntelAssembler::lsl<16>(Param::ax, Param::m_bx_si, 0), "\x0f\x03\x00", 3);
+			Check(IntelAssembler::lsl<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x0f\x03\x08", 5);
+			Check(IntelAssembler::lsl<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x0f\x03\x00", 5);
+			Check(IntelAssembler::lsl<32>(Param::ecx, Param::m_eax, 0), "\x0f\x03\x08", 3);
+			Check(IntelAssembler::lsl<64>(Param::rcx, Param::m_rax, 0), "\x48\x0f\x03\x08", 4);
+		}
+
+		TEST_METHOD(lss)
+		{
+			Check(IntelAssembler::lss<16>(Param::ax, Param::m_bx_si, 0), "\x0f\xb2\x00", 3);
+			Check(IntelAssembler::lss<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x0f\xb2\x08", 5);
+			Check(IntelAssembler::lss<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x0f\xb2\x00", 5);
+			Check(IntelAssembler::lss<32>(Param::ecx, Param::m_eax, 0), "\x0f\xb2\x08", 3);
+			Check(IntelAssembler::lss<64>(Param::rcx, Param::m_rax, 0), "\x48\x0f\xb2\x08", 4);
+		}
+
+		TEST_METHOD(ltr)
+		{
+			Check(IntelAssembler::ltr<16>(Param::m_bx_si), "\x0f\x00\x18", 3);
+			Check(IntelAssembler::ltr<32>(Param::m_eax), "\x0f\x00\x18", 3);
+			Check(IntelAssembler::ltr<64>(Param::m_rax), "\x0f\x00\x18", 3);
+		}
+
+		TEST_METHOD(verr)
+		{
+			Check(IntelAssembler::verr<16>(Param::m_bx_si), "\x0f\x00\x20", 3);
+			Check(IntelAssembler::verr<32>(Param::m_eax), "\x0f\x00\x20", 3);
+			Check(IntelAssembler::verr<64>(Param::m_rax), "\x0f\x00\x20", 3);
+		}
+
+		TEST_METHOD(verw)
+		{
+			Check(IntelAssembler::verw<16>(Param::m_bx_si), "\x0f\x00\x28", 3);
+			Check(IntelAssembler::verw<32>(Param::m_eax), "\x0f\x00\x28", 3);
+			Check(IntelAssembler::verw<64>(Param::m_rax), "\x0f\x00\x28", 3);
 		}
 
 		TEST_METHOD(nop)
