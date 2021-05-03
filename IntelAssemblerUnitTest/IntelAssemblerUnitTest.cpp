@@ -2122,6 +2122,37 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::lfs<64>(Param::rcx, Param::m_rax, 0), "\x48\x0f\xb4\x08", 4);
 		}
 
+		TEST_METHOD(lgdt)
+		{
+			Check(IntelAssembler::lgdt<16>(Param::m_bx_si), "\x0f\x01\x10", 3);
+			Check(IntelAssembler::lgdt<32>(Param::m_eax), "\x0f\x01\x10", 3);
+			Check(IntelAssembler::lgdt<64>(Param::m_rax), "\x0f\x01\x10", 3);
+		}
+
+		TEST_METHOD(lgs)
+		{
+			// 16-bit
+
+			Check(IntelAssembler::lgs<16>(Param::ax, Param::m_bx_si, 0), "\x0f\xb5\x00", 3);
+			Check(IntelAssembler::lgs<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x0f\xb5\x08", 5);
+
+			// 32-bit
+
+			Check(IntelAssembler::lgs<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x0f\xb5\x00", 5);
+			Check(IntelAssembler::lgs<32>(Param::ecx, Param::m_eax, 0), "\x0f\xb5\x08", 3);
+
+			// 64-bit
+
+			Check(IntelAssembler::lgs<64>(Param::rcx, Param::m_rax, 0), "\x48\x0f\xb5\x08", 4);
+		}
+
+		TEST_METHOD(lidt)
+		{
+			Check(IntelAssembler::lidt<16>(Param::m_bx_si), "\x0f\x01\x18", 3);
+			Check(IntelAssembler::lidt<32>(Param::m_eax), "\x0f\x01\x18", 3);
+			Check(IntelAssembler::lidt<64>(Param::m_rax), "\x0f\x01\x18", 3);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
