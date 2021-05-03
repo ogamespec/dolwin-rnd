@@ -1969,6 +1969,159 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::inc<64>(Param::eax), "\xff\xc0", 2);
 		}
 
+		TEST_METHOD(invlpg)
+		{
+			Check(IntelAssembler::invlpg<16>(Param::m_bp_di, PtrHint::BytePtr), "\x0f\x01\x3b", 3);
+			Check(IntelAssembler::invlpg<32>(Param::m_bp_di, PtrHint::BytePtr), "\x67\x0f\x01\x3b", 4);
+			Check(IntelAssembler::invlpg<32>(Param::m_eax, PtrHint::BytePtr), "\x0f\x01\x38", 3);
+			Check(IntelAssembler::invlpg<64>(Param::m_eax, PtrHint::BytePtr), "\x67\x0f\x01\x38", 4);
+			Check(IntelAssembler::invlpg<64>(Param::m_rax, PtrHint::BytePtr), "\x0f\x01\x38", 3);
+		}
+
+		TEST_METHOD(invpcid)
+		{
+			Check(IntelAssembler::invpcid<16>(Param::eax, Param::m_ecx), "\x66\x67\x0f\x38\x82\x01", 6);
+			Check(IntelAssembler::invpcid<32>(Param::eax, Param::m_ecx), "\x66\x0f\x38\x82\x01", 5);
+			Check(IntelAssembler::invpcid<64>(Param::rax, Param::m_rcx), "\x66\x48\x0f\x38\x82\x01", 6);
+
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::invpcid<32>(Param::al, Param::m_eax);
+				});
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::invpcid<32>(Param::ax, Param::m_eax);
+				});
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::invpcid<64>(Param::al, Param::m_rax);
+				});
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::invpcid<64>(Param::ax, Param::m_rax);
+				});
+		}
+
+		TEST_METHOD(jmp)
+		{
+			// Rel8, Rel16, Rel32
+			Check(IntelAssembler::jmp<16>(Param::rel8, 0xaa), "\xeb\xaa", 2);
+			Check(IntelAssembler::jmp<16>(Param::rel16, 0x1234), "\xe9\x34\x12", 3);
+			Check(IntelAssembler::jmp<32>(Param::rel16, 0x1234), "\x66\xe9\x34\x12", 4);
+			Check(IntelAssembler::jmp<16>(Param::rel32, 0x12345678), "\x66\xe9\x78\x56\x34\x12", 6);
+			Check(IntelAssembler::jmp<32>(Param::rel32, 0x12345678), "\xe9\x78\x56\x34\x12", 5);
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::jmp<64>(Param::rel16, 0x1234);
+				});
+			Check(IntelAssembler::jmp<64>(Param::rel32, 0x12345678), "\xe9\x78\x56\x34\x12", 5);
+
+			// M
+			Check(IntelAssembler::jmp<16>(Param::m_bx_si), "\xff\x20", 2);
+			Check(IntelAssembler::jmp<32>(Param::m_bx_si), "\x67\xff\x20", 3);
+			Check(IntelAssembler::jmp<16>(Param::m_eax), "\x67\xff\x20", 3);
+			Check(IntelAssembler::jmp<32>(Param::m_eax), "\xff\x20", 2);
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::jmp<64>(Param::m_bx_si);
+				});
+			Check(IntelAssembler::jmp<64>(Param::m_eax), "\x67\xff\x20", 3);
+			Check(IntelAssembler::jmp<64>(Param::m_rax), "\xff\x20", 2);
+		}
+
+		TEST_METHOD(jmpf)
+		{
+			// D
+			Check(IntelAssembler::jmpf<16>(Param::farptr16, 0x1234, 0x1234), "\xea\x34\x12\x34\x12", 5);
+			Check(IntelAssembler::jmpf<32>(Param::farptr16, 0x1234, 0x1234), "\x66\xea\x34\x12\x34\x12", 6);
+			Check(IntelAssembler::jmpf<16>(Param::farptr32, 0x1234, 0x12345678), "\x66\xea\x78\x56\x34\x12\x34\x12", 8);
+			Check(IntelAssembler::jmpf<32>(Param::farptr32, 0x1234, 0x12345678), "\xea\x78\x56\x34\x12\x34\x12", 7);
+
+			// M
+			Check(IntelAssembler::jmpf<16>(Param::m_bx_si), "\xff\x28", 2);
+			Check(IntelAssembler::jmpf<32>(Param::m_bx_si), "\x67\xff\x28", 3);
+			Check(IntelAssembler::jmpf<16>(Param::m_eax), "\x67\xff\x28", 3);
+			Check(IntelAssembler::jmpf<32>(Param::m_eax), "\xff\x28", 2);
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::jmpf<64>(Param::m_bx_si);
+				});
+			Check(IntelAssembler::jmpf<64>(Param::m_eax), "\x67\xff\x28", 3);
+			Check(IntelAssembler::jmpf<64>(Param::m_rax), "\xff\x28", 2);
+		}
+
+		TEST_METHOD(lar)
+		{
+			Check(IntelAssembler::lar<16>(Param::ax, Param::m_bx_si, 0), "\x0f\x02\x00", 3);
+			Check(IntelAssembler::lar<32>(Param::eax, Param::m_eax, 0), "\x0f\x02\x00", 3);
+			Check(IntelAssembler::lar<64>(Param::rax, Param::m_rax, 0), "\x48\x0f\x02\x00", 4);
+		}
+
+		TEST_METHOD(lds)
+		{
+			// 16-bit
+
+			Check(IntelAssembler::lds<16>(Param::ax, Param::m_bx_si, 0), "\xc5\x00", 2);
+			Check(IntelAssembler::lds<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\xc5\x08", 4);
+
+			// 32-bit
+
+			Check(IntelAssembler::lds<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\xc5\x00", 4);
+			Check(IntelAssembler::lds<32>(Param::ecx, Param::m_eax, 0), "\xc5\x08", 2);
+
+			// 64-bit -- Failed
+
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::lds<64>(Param::ax, Param::m_bx_si, 0);
+				});
+		}
+
+		TEST_METHOD(lea)
+		{
+			// 16-bit
+
+			Check(IntelAssembler::lea<16>(Param::ax, Param::m_bx_si, 0), "\x8d\x00", 2);
+			Check(IntelAssembler::lea<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x8d\x08", 4);
+
+			// 32-bit
+
+			Check(IntelAssembler::lea<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x8d\x00", 4);
+			Check(IntelAssembler::lea<32>(Param::ecx, Param::m_eax, 0), "\x8d\x08", 2);
+
+			// 64-bit
+
+			Check(IntelAssembler::lea<64>(Param::rcx, Param::m_rax, 0), "\x48\x8d\x08", 3);
+		}
+
+		TEST_METHOD(les)
+		{
+			// 16-bit
+
+			Check(IntelAssembler::les<16>(Param::ax, Param::m_bx_si, 0), "\xc4\x00", 2);
+			Check(IntelAssembler::les<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\xc4\x08", 4);
+
+			// 32-bit
+
+			Check(IntelAssembler::les<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\xc4\x00", 4);
+			Check(IntelAssembler::les<32>(Param::ecx, Param::m_eax, 0), "\xc4\x08", 2);
+
+			// 64-bit -- Failed
+
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::les<64>(Param::ax, Param::m_bx_si, 0);
+				});
+		}
+
+		TEST_METHOD(lfs)
+		{
+			// 16-bit
+
+			Check(IntelAssembler::lfs<16>(Param::ax, Param::m_bx_si, 0), "\x0f\xb4\x00", 3);
+			Check(IntelAssembler::lfs<16>(Param::ecx, Param::m_eax, 0), "\x66\x67\x0f\xb4\x08", 5);
+
+			// 32-bit
+
+			Check(IntelAssembler::lfs<32>(Param::ax, Param::m_bx_si, 0), "\x66\x67\x0f\xb4\x00", 5);
+			Check(IntelAssembler::lfs<32>(Param::ecx, Param::m_eax, 0), "\x0f\xb4\x08", 3);
+
+			// 64-bit
+
+			Check(IntelAssembler::lfs<64>(Param::rcx, Param::m_rax, 0), "\x48\x0f\xb4\x08", 4);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
