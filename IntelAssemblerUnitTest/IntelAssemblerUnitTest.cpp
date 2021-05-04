@@ -2193,49 +2193,49 @@ namespace IntelAssemblerUnitTest
 		TEST_METHOD(mov)
 		{
 			// MR
-			Check(IntelAssembler::mov<16>(Param::m_bp_di, Param::al, 0, 0), "\x88\x03", 2);
-			Check(IntelAssembler::mov<64>(Param::sib_r11_4_rdx, Param::r8b, 0, 0), "\x46\x88\x04\x9a", 4);
-			Check(IntelAssembler::mov<16>(Param::m_bx, Param::ax, 0, 0), "\x89\x07", 2);
-			Check(IntelAssembler::mov<32>(Param::m_ebx, Param::eax, 0, 0), "\x89\x03", 2);
-			Check(IntelAssembler::mov<64>(Param::m_rbx, Param::rax, 0, 0), "\x48\x89\x03", 3);
-			Check(IntelAssembler::mov<64>(Param::m_eax, Param::rax, 0, 0), "\x67\x48\x89\x00", 4);
+			Check(IntelAssembler::mov<16>(Param::m_bp_di, Param::al), "\x88\x03", 2);
+			Check(IntelAssembler::mov<64>(Param::sib_r11_4_rdx, Param::r8b), "\x46\x88\x04\x9a", 4);
+			Check(IntelAssembler::mov<16>(Param::m_bx, Param::ax), "\x89\x07", 2);
+			Check(IntelAssembler::mov<32>(Param::m_ebx, Param::eax), "\x89\x03", 2);
+			Check(IntelAssembler::mov<64>(Param::m_rbx, Param::rax), "\x48\x89\x03", 3);
+			Check(IntelAssembler::mov<64>(Param::m_eax, Param::rax), "\x67\x48\x89\x00", 4);
 
 			// RM
-			Check(IntelAssembler::mov<16>(Param::al, Param::m_bp_di, 0, 0), "\x8a\x03", 2);
-			Check(IntelAssembler::mov<64>(Param::r8b, Param::sib_r11_4_rdx, 0, 0), "\x46\x8a\x04\x9a", 4);
-			Check(IntelAssembler::mov<16>(Param::ax, Param::m_bx, 0, 0), "\x8b\x07", 2);
-			Check(IntelAssembler::mov<32>(Param::eax, Param::m_ebx, 0, 0), "\x8b\x03", 2);
-			Check(IntelAssembler::mov<64>(Param::rax, Param::m_rbx, 0, 0), "\x48\x8b\x03", 3);
+			Check(IntelAssembler::mov<16>(Param::al, Param::m_bp_di), "\x8a\x03", 2);
+			Check(IntelAssembler::mov<64>(Param::r8b, Param::sib_r11_4_rdx), "\x46\x8a\x04\x9a", 4);
+			Check(IntelAssembler::mov<16>(Param::ax, Param::m_bx), "\x8b\x07", 2);
+			Check(IntelAssembler::mov<32>(Param::eax, Param::m_ebx), "\x8b\x03", 2);
+			Check(IntelAssembler::mov<64>(Param::rax, Param::m_rbx), "\x48\x8b\x03", 3);
 
 			// MSr (Sreg)
-			Check(IntelAssembler::mov<16>(Param::ax, Param::ds, 0, 0), "\x8c\xd8", 2);
-			Check(IntelAssembler::mov<16>(Param::m_bp_di, Param::ds, 0, 0), "\x8c\x1b", 2);
-			Check(IntelAssembler::mov<32>(Param::ax, Param::ds, 0, 0), "\x66\x8c\xd8", 3);
+			Check(IntelAssembler::mov<16>(Param::ax, Param::ds), "\x8c\xd8", 2);
+			Check(IntelAssembler::mov<16>(Param::m_bp_di, Param::ds), "\x8c\x1b", 2);
+			Check(IntelAssembler::mov<32>(Param::ax, Param::ds), "\x66\x8c\xd8", 3);
 			Check(IntelAssembler::mov<32>(Param::m_eax, Param::ds, 0, 0, PtrHint::WordPtr), "\x66\x8c\x18", 3);
-			Check(IntelAssembler::mov<64>(Param::rax, Param::ds, 0, 0), "\x48\x8c\xd8", 3);
-			Check(IntelAssembler::mov<64>(Param::m_rax, Param::ds, 0, 0), "\x8c\x18", 2);
+			Check(IntelAssembler::mov<64>(Param::rax, Param::ds), "\x48\x8c\xd8", 3);
+			Check(IntelAssembler::mov<64>(Param::m_rax, Param::ds), "\x8c\x18", 2);
 
 			// SrM (Sreg)
-			Check(IntelAssembler::mov<16>(Param::ds, Param::ax, 0, 0), "\x8e\xd8", 2);
-			Check(IntelAssembler::mov<16>(Param::ds, Param::m_bp_di, 0, 0), "\x8e\x1b", 2);
-			Check(IntelAssembler::mov<32>(Param::ds, Param::ax, 0, 0), "\x66\x8e\xd8", 3);
+			Check(IntelAssembler::mov<16>(Param::ds, Param::ax), "\x8e\xd8", 2);
+			Check(IntelAssembler::mov<16>(Param::ds, Param::m_bp_di), "\x8e\x1b", 2);
+			Check(IntelAssembler::mov<32>(Param::ds, Param::ax), "\x66\x8e\xd8", 3);
 			Check(IntelAssembler::mov<32>(Param::ds, Param::m_eax, 0, 0, PtrHint::WordPtr), "\x66\x8e\x18", 3);
-			Check(IntelAssembler::mov<64>(Param::ds, Param::rax, 0, 0), "\x48\x8e\xd8", 3);
-			Check(IntelAssembler::mov<64>(Param::ds, Param::m_rax, 0, 0), "\x8e\x18", 2);
+			Check(IntelAssembler::mov<64>(Param::ds, Param::rax), "\x48\x8e\xd8", 3);
+			Check(IntelAssembler::mov<64>(Param::ds, Param::m_rax), "\x8e\x18", 2);
 
 			// FD
-			Check(IntelAssembler::mov<16>(Param::al, Param::moffs16, 0x1234, 0), "\xa0\x34\x12", 3);
-			Check(IntelAssembler::mov<64>(Param::al, Param::moffs64, 0x12345678aabbccdd, 0), "\x48\xa0\xdd\xcc\xbb\xaa\x78\x56\x34\x12", 10);
-			Check(IntelAssembler::mov<16>(Param::ax, Param::moffs16, 0x1234, 0), "\xa1\x34\x12", 3);
-			Check(IntelAssembler::mov<32>(Param::eax, Param::moffs32, 0x12345678, 0), "\xa1\x78\x56\x34\x12", 5);
-			Check(IntelAssembler::mov<64>(Param::rax, Param::moffs64, 0x12345678aabbccdd, 0), "\x48\xa1\xdd\xcc\xbb\xaa\x78\x56\x34\x12", 10);
+			Check(IntelAssembler::mov<16>(Param::al, Param::moffs16, 0x1234), "\xa0\x34\x12", 3);
+			Check(IntelAssembler::mov<64>(Param::al, Param::moffs64, 0x12345678aabbccdd), "\x48\xa0\xdd\xcc\xbb\xaa\x78\x56\x34\x12", 10);
+			Check(IntelAssembler::mov<16>(Param::ax, Param::moffs16, 0x1234), "\xa1\x34\x12", 3);
+			Check(IntelAssembler::mov<32>(Param::eax, Param::moffs32, 0x12345678), "\xa1\x78\x56\x34\x12", 5);
+			Check(IntelAssembler::mov<64>(Param::rax, Param::moffs64, 0x12345678aabbccdd), "\x48\xa1\xdd\xcc\xbb\xaa\x78\x56\x34\x12", 10);
 
 			// TD
-			Check(IntelAssembler::mov<16>(Param::moffs16, Param::al, 0x1234, 0), "\xa2\x34\x12", 3);
-			Check(IntelAssembler::mov<64>(Param::moffs64, Param::al, 0x12345678aabbccdd, 0), "\x48\xa2\xdd\xcc\xbb\xaa\x78\x56\x34\x12", 10);
-			Check(IntelAssembler::mov<16>(Param::moffs16, Param::ax, 0x1234, 0), "\xa3\x34\x12", 3);
-			Check(IntelAssembler::mov<32>(Param::moffs32, Param::eax, 0x12345678, 0), "\xa3\x78\x56\x34\x12", 5);
-			Check(IntelAssembler::mov<64>(Param::moffs64, Param::rax, 0x12345678aabbccdd, 0), "\x48\xa3\xdd\xcc\xbb\xaa\x78\x56\x34\x12", 10);
+			Check(IntelAssembler::mov<16>(Param::moffs16, Param::al, 0x1234), "\xa2\x34\x12", 3);
+			Check(IntelAssembler::mov<64>(Param::moffs64, Param::al, 0x12345678aabbccdd), "\x48\xa2\xdd\xcc\xbb\xaa\x78\x56\x34\x12", 10);
+			Check(IntelAssembler::mov<16>(Param::moffs16, Param::ax, 0x1234), "\xa3\x34\x12", 3);
+			Check(IntelAssembler::mov<32>(Param::moffs32, Param::eax, 0x12345678), "\xa3\x78\x56\x34\x12", 5);
+			Check(IntelAssembler::mov<64>(Param::moffs64, Param::rax, 0x12345678aabbccdd), "\x48\xa3\xdd\xcc\xbb\xaa\x78\x56\x34\x12", 10);
 
 			// OI
 			Check(IntelAssembler::mov<16>(Param::cl, Param::imm8, 0, 0x12), "\xb1\x12", 2);
