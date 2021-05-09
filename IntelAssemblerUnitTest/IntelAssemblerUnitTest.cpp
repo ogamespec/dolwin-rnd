@@ -2317,5 +2317,52 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::nop<32>(Param::sib_eax_eax_disp32, PtrHint::DwordPtr, 0), "\x0f\x1f\x84\x00\x00\x00\x00", 8);
 			Check(IntelAssembler::nop<32>(Param::sib_eax_eax_disp32, PtrHint::WordPtr, 0), "\x66\x0f\x1f\x84\x00\x00\x00\x00", 9);
 		}
+
+		TEST_METHOD(_not)
+		{
+			Check(IntelAssembler::_not<16>(Param::m_bp_di, PtrHint::BytePtr), "\xf6\x13", 2);
+			Check(IntelAssembler::_not<32>(Param::m_bp_di, PtrHint::BytePtr), "\x67\xf6\x13", 3);
+			Check(IntelAssembler::_not<64>(Param::m_eax, PtrHint::WordPtr), "\x66\x67\xf7\x10", 4);
+		}
+
+		TEST_METHOD(_or)
+		{
+			Check(IntelAssembler::_or<16>(Param::al, Param::imm8, 0, 0xaa), "\x0c\xaa", 2);
+			Check(IntelAssembler::_or<16>(Param::ax, Param::imm16, 0, 0x1234), "\x0d\x34\x12", 3);
+			Check(IntelAssembler::_or<16>(Param::cl, Param::imm8, 0, 0xaa), "\x80\xc9\xaa", 3);
+			Check(IntelAssembler::_or<16>(Param::cx, Param::imm16, 0, 0x1234), "\x81\xc9\x34\x12", 4);
+			Check(IntelAssembler::_or<16>(Param::cx, Param::simm8_as16, 0, -0x56), "\x83\xc9\xaa", 3);
+			Check(IntelAssembler::_or<16>(Param::m_bp_di, Param::al, 0, 0), "\x08\x03", 2);
+			Check(IntelAssembler::_or<16>(Param::m_bx, Param::ax, 0, 0), "\x09\x07", 2);
+			Check(IntelAssembler::_or<16>(Param::al, Param::m_bp_di, 0, 0), "\x0a\x03", 2);
+			Check(IntelAssembler::_or<16>(Param::ax, Param::m_bx, 0, 0), "\x0b\x07", 2);
+		}
+
+		TEST_METHOD(pop)
+		{
+			Check(IntelAssembler::pop<16>(Param::m_bp_di, PtrHint::WordPtr), "\x8f\x03", 2);
+			Check(IntelAssembler::pop<32>(Param::m_eax, PtrHint::DwordPtr), "\x8f\x00", 2);
+			Check(IntelAssembler::pop<64>(Param::m_rax, PtrHint::QwordPtr), "\x48\x8f\x00", 3);
+
+			Check(IntelAssembler::pop<16>(Param::ax), "\x58", 1);
+			Check(IntelAssembler::pop<32>(Param::eax), "\x58", 1);
+			Check(IntelAssembler::pop<64>(Param::rax), "\x58", 1);
+		}
+
+		TEST_METHOD(push)
+		{
+			Check(IntelAssembler::push<16>(Param::m_bp_di, PtrHint::WordPtr), "\xff\x33", 2);
+			Check(IntelAssembler::push<32>(Param::m_eax, PtrHint::DwordPtr), "\xff\x30", 2);
+			Check(IntelAssembler::push<64>(Param::m_rax, PtrHint::QwordPtr), "\x48\xff\x30", 3);
+
+			Check(IntelAssembler::push<16>(Param::ax), "\x50", 1);
+			Check(IntelAssembler::push<32>(Param::eax), "\x50", 1);
+			Check(IntelAssembler::push<64>(Param::rax), "\x50", 1);
+
+			Check(IntelAssembler::push<16>(Param::imm8, PtrHint::BytePtr, 0, 0xaa), "\x6a\xaa", 2);
+			Check(IntelAssembler::push<16>(Param::imm16, PtrHint::WordPtr, 0, 0x1234), "\x68\x34\x12", 3);
+			Check(IntelAssembler::push<32>(Param::imm32, PtrHint::DwordPtr, 0, 0x12345678), "\x68\x78\x56\x34\x12", 5);
+		}
+
 	};
 }
