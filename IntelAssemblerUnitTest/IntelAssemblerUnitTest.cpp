@@ -2431,5 +2431,159 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::sbb<16>(Param::ax, Param::m_bx, 0, 0), "\x1b\x07", 2);
 		}
 
+		TEST_METHOD(seta)
+		{
+			Check(IntelAssembler::seta<16>(Param::al), "\x0f\x97\xc0", 3);
+			Check(IntelAssembler::seta<16>(Param::m_bp_di), "\x0f\x97\x03", 3);
+			Check(IntelAssembler::seta<32>(Param::m_eax), "\x0f\x97\x00", 3);
+			Check(IntelAssembler::seta<64>(Param::sil), "\x40\x0f\x97\xc6", 4);
+			Check(IntelAssembler::seta<64>(Param::m_rax), "\x0f\x97\x00", 3);
+		}
+
+		TEST_METHOD(setae)
+		{
+			Check(IntelAssembler::setae<16>(Param::al), "\x0f\x93\xc0", 3);
+		}
+
+		TEST_METHOD(setb)
+		{
+			Check(IntelAssembler::setb<16>(Param::al), "\x0f\x92\xc0", 3);
+		}
+
+		TEST_METHOD(setbe)
+		{
+			Check(IntelAssembler::setbe<16>(Param::al), "\x0f\x96\xc0", 3);
+		}
+
+		TEST_METHOD(setc)
+		{
+			Check(IntelAssembler::setc<16>(Param::al), "\x0f\x92\xc0", 3);
+		}
+
+		TEST_METHOD(sete)
+		{
+			Check(IntelAssembler::sete<16>(Param::al), "\x0f\x94\xc0", 3);
+		}
+
+		TEST_METHOD(setg)
+		{
+			Check(IntelAssembler::setg<16>(Param::al), "\x0f\x9f\xc0", 3);
+		}
+
+		TEST_METHOD(setge)
+		{
+			Check(IntelAssembler::setge<16>(Param::al), "\x0f\x9d\xc0", 3);
+		}
+
+		TEST_METHOD(setl)
+		{
+			Check(IntelAssembler::setl<16>(Param::al), "\x0f\x9c\xc0", 3);
+		}
+
+		TEST_METHOD(setle)
+		{
+			Check(IntelAssembler::setle<16>(Param::al), "\x0f\x9e\xc0", 3);
+		}
+
+		TEST_METHOD(setna)
+		{
+			Check(IntelAssembler::setna<16>(Param::al), "\x0f\x96\xc0", 3);
+		}
+
+		TEST_METHOD(setnae)
+		{
+			Check(IntelAssembler::setnae<16>(Param::al), "\x0f\x92\xc0", 3);
+		}
+
+		TEST_METHOD(setnb)
+		{
+			Check(IntelAssembler::setnb<16>(Param::al), "\x0f\x93\xc0", 3);
+		}
+
+		TEST_METHOD(setnbe)
+		{
+			Check(IntelAssembler::setnbe<16>(Param::al), "\x0f\x97\xc0", 3);
+		}
+
+		TEST_METHOD(setnc)
+		{
+			Check(IntelAssembler::setnc<16>(Param::al), "\x0f\x93\xc0", 3);
+		}
+
+		TEST_METHOD(setne)
+		{
+			Check(IntelAssembler::setne<16>(Param::al), "\x0f\x95\xc0", 3);
+		}
+
+		TEST_METHOD(setng)
+		{
+			Check(IntelAssembler::setng<16>(Param::al), "\x0f\x9e\xc0", 3);
+		}
+
+		TEST_METHOD(setnge)
+		{
+			Check(IntelAssembler::setnge<16>(Param::al), "\x0f\x9c\xc0", 3);
+		}
+
+		TEST_METHOD(setnl)
+		{
+			Check(IntelAssembler::setnl<16>(Param::al), "\x0f\x9d\xc0", 3);
+		}
+
+		TEST_METHOD(setnle)
+		{
+			Check(IntelAssembler::setnle<16>(Param::al), "\x0f\x9f\xc0", 3);
+		}
+
+		TEST_METHOD(setno)
+		{
+			Check(IntelAssembler::setno<16>(Param::al), "\x0f\x91\xc0", 3);
+		}
+
+		TEST_METHOD(setnp)
+		{
+			Check(IntelAssembler::setnp<16>(Param::al), "\x0f\x9b\xc0", 3);
+		}
+
+		TEST_METHOD(setns)
+		{
+			Check(IntelAssembler::setns<16>(Param::al), "\x0f\x99\xc0", 3);
+		}
+
+		TEST_METHOD(setnz)
+		{
+			Check(IntelAssembler::setnz<16>(Param::al), "\x0f\x95\xc0", 3);
+		}
+
+		TEST_METHOD(seto)
+		{
+			Check(IntelAssembler::seto<16>(Param::al), "\x0f\x90\xc0", 3);
+		}
+
+		TEST_METHOD(setp)
+		{
+			Check(IntelAssembler::setp<16>(Param::al), "\x0f\x9a\xc0", 3);
+		}
+
+		TEST_METHOD(setpe)
+		{
+			Check(IntelAssembler::setpe<16>(Param::al), "\x0f\x9a\xc0", 3);
+		}
+
+		TEST_METHOD(setpo)
+		{
+			Check(IntelAssembler::setpo<16>(Param::al), "\x0f\x9b\xc0", 3);
+		}
+
+		TEST_METHOD(sets)
+		{
+			Check(IntelAssembler::sets<16>(Param::al), "\x0f\x98\xc0", 3);
+		}
+
+		TEST_METHOD(setz)
+		{
+			Check(IntelAssembler::setz<16>(Param::al), "\x0f\x94\xc0", 3);
+		}
+
 	};
 }
