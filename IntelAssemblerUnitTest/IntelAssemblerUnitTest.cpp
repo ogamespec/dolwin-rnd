@@ -2295,6 +2295,13 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::movzx<64>(Param::rax, Param::ax), "\x48\x0f\xb7\xc0", 4);
 		}
 
+		TEST_METHOD(mul)
+		{
+			Check(IntelAssembler::mul<16>(Param::m_bp_di, PtrHint::BytePtr), "\xf6\x23", 2);
+			Check(IntelAssembler::mul<32>(Param::m_bp_di, PtrHint::BytePtr), "\x67\xf6\x23", 3);
+			Check(IntelAssembler::mul<64>(Param::m_eax, PtrHint::BytePtr), "\x67\xf6\x20", 3);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
