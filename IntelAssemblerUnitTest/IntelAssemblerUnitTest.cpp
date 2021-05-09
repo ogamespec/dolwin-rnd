@@ -2364,5 +2364,59 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::push<32>(Param::imm32, PtrHint::DwordPtr, 0, 0x12345678), "\x68\x78\x56\x34\x12", 5);
 		}
 
+		TEST_METHOD(rcl)
+		{
+			// M1
+			Check(IntelAssembler::rcl<16>(Param::al, Param::imm8, 0, 1), "\xd0\xd0", 2);
+			Check(IntelAssembler::rcl<64>(Param::sil, Param::imm8, 0, 1), "\x40\xd0\xd6", 3);
+			Check(IntelAssembler::rcl<16>(Param::m_bp_di, Param::imm8, 0, 1, PtrHint::BytePtr), "\xd0\x13", 2);
+			Check(IntelAssembler::rcl<16>(Param::ax, Param::imm8, 0, 1), "\xd1\xd0", 2);
+			Check(IntelAssembler::rcl<16>(Param::m_bp_di, Param::imm8, 0, 1, PtrHint::WordPtr), "\xd1\x13", 2);
+			Check(IntelAssembler::rcl<32>(Param::m_eax, Param::imm8, 0, 1, PtrHint::DwordPtr), "\xd1\x10", 2);
+			Check(IntelAssembler::rcl<64>(Param::rax, Param::imm8, 0, 1), "\x48\xd1\xd0", 3);
+			Check(IntelAssembler::rcl<64>(Param::m_rax, Param::imm8, 0, 1, PtrHint::QwordPtr), "\x48\xd1\x10", 3);
+
+			// MC
+			Check(IntelAssembler::rcl<16>(Param::al, Param::cl), "\xd2\xd0", 2);
+			Check(IntelAssembler::rcl<64>(Param::sil, Param::cl), "\x40\xd2\xd6", 3);
+			Check(IntelAssembler::rcl<16>(Param::m_bp_di, Param::cl, 0, 0, PtrHint::BytePtr), "\xd2\x13", 2);
+			Check(IntelAssembler::rcl<32>(Param::eax, Param::cl), "\xd3\xd0", 2);
+			Check(IntelAssembler::rcl<32>(Param::m_eax, Param::cl, 0, 0, PtrHint::DwordPtr), "\xd3\x10", 2);
+			Check(IntelAssembler::rcl<64>(Param::m_rax, Param::cl, 0, 0, PtrHint::QwordPtr), "\x48\xd3\x10", 3);
+			Check(IntelAssembler::rcl<64>(Param::rax, Param::cl), "\x48\xd3\xd0", 3);
+
+			// MI
+			Check(IntelAssembler::rcl<16>(Param::m_bp_di, Param::imm8, 0, 3, PtrHint::BytePtr), "\xc0\x13\x03", 3);
+			Check(IntelAssembler::rcl<32>(Param::m_eax, Param::imm8, 0, 3, PtrHint::BytePtr), "\xc0\x10\x03", 3);
+			Check(IntelAssembler::rcl<16>(Param::m_bp_di, Param::imm8, 0, 3, PtrHint::WordPtr), "\xc1\x13\x03", 3);
+			Check(IntelAssembler::rcl<32>(Param::m_eax, Param::imm8, 0, 3, PtrHint::DwordPtr), "\xc1\x10\x03", 3);
+			Check(IntelAssembler::rcl<64>(Param::m_rax, Param::imm8, 0, 3, PtrHint::QwordPtr), "\x48\xc1\x10\x03", 4);
+		}
+
+		TEST_METHOD(rcr)
+		{
+			Check(IntelAssembler::rcr<16>(Param::al, Param::imm8, 0, 1), "\xd0\xd8", 2);
+		}
+
+		TEST_METHOD(rol)
+		{
+			Check(IntelAssembler::rol<16>(Param::al, Param::imm8, 0, 1), "\xd0\xc0", 2);
+		}
+
+		TEST_METHOD(ror)
+		{
+			Check(IntelAssembler::ror<16>(Param::al, Param::imm8, 0, 1), "\xd0\xc8", 2);
+		}
+
+		TEST_METHOD(sal)
+		{
+			Check(IntelAssembler::sal<16>(Param::al, Param::imm8, 0, 1), "\xd0\xe0", 2);
+		}
+
+		TEST_METHOD(sar)
+		{
+			Check(IntelAssembler::sar<16>(Param::al, Param::imm8, 0, 1), "\xd0\xf8", 2);
+		}
+
 	};
 }
