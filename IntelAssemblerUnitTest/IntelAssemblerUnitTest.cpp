@@ -2252,6 +2252,49 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::mov<64>(Param::m_rcx, Param::imm32, 0, 0x12345678, PtrHint::QwordPtr), "\x48\xc7\x01\x78\x56\x34\x12", 7);
 		}
 
+		TEST_METHOD(movbe)
+		{
+			Check(IntelAssembler::movbe<16>(Param::ax, Param::m_bp_di), "\x0f\x38\xf0\x03", 4);
+			Check(IntelAssembler::movbe<32>(Param::eax, Param::m_eax), "\x0f\x38\xf0\x00", 4);
+			Check(IntelAssembler::movbe<64>(Param::rax, Param::m_rax), "\x48\x0f\x38\xf0\x00", 5);
+
+			Check(IntelAssembler::movbe<16>(Param::m_bp_di, Param::ax), "\x0f\x38\xf1\x03", 4);
+			Check(IntelAssembler::movbe<32>(Param::m_eax, Param::eax), "\x0f\x38\xf1\x00", 4);
+			Check(IntelAssembler::movbe<64>(Param::m_rax, Param::rax), "\x48\x0f\x38\xf1\x00", 5);
+		}
+
+		TEST_METHOD(movsx)
+		{
+			Check(IntelAssembler::movsx<16>(Param::ax, Param::al), "\x0f\xbe\xc0", 3);
+			Check(IntelAssembler::movsx<32>(Param::eax, Param::al), "\x0f\xbe\xc0", 3);
+			Check(IntelAssembler::movsx<64>(Param::rax, Param::al), "\x48\x0f\xbe\xc0", 4);
+			Check(IntelAssembler::movsx<32>(Param::eax, Param::ax), "\x0f\xbf\xc0", 3);
+			Check(IntelAssembler::movsx<64>(Param::rax, Param::ax), "\x48\x0f\xbf\xc0", 4);
+
+			// Try MOVSX with memory (we will not try MOVSXD and MOVZX).
+
+			Check(IntelAssembler::movsx<16>(Param::ax, Param::m_bp_di, 0, PtrHint::BytePtr), "\x0f\xbe\x03", 3);
+			Check(IntelAssembler::movsx<32>(Param::eax, Param::m_bp_di, 0, PtrHint::BytePtr), "\x67\x0f\xbe\x03", 4);
+			Check(IntelAssembler::movsx<32>(Param::eax, Param::m_eax, 0, PtrHint::BytePtr), "\x0f\xbe\x00", 3);
+			Check(IntelAssembler::movsx<32>(Param::eax, Param::m_eax, 0, PtrHint::WordPtr), "\x0f\xbf\x00", 3);
+			Check(IntelAssembler::movsx<16>(Param::eax, Param::m_eax, 0, PtrHint::WordPtr), "\x66\x67\x0f\xbf\x00", 5);
+			Check(IntelAssembler::movsx<64>(Param::rax, Param::m_rax, 0, PtrHint::WordPtr), "\x48\x0f\xbf\x00", 4);
+		}
+
+		TEST_METHOD(movsxd)
+		{
+			Check(IntelAssembler::movsxd<64>(Param::rax, Param::eax), "\x48\x63\xc0", 3);
+		}
+
+		TEST_METHOD(movzx)
+		{
+			Check(IntelAssembler::movzx<16>(Param::ax, Param::al), "\x0f\xb6\xc0", 3);
+			Check(IntelAssembler::movzx<32>(Param::eax, Param::al), "\x0f\xb6\xc0", 3);
+			Check(IntelAssembler::movzx<64>(Param::rax, Param::al), "\x48\x0f\xb6\xc0", 4);
+			Check(IntelAssembler::movzx<32>(Param::eax, Param::ax), "\x0f\xb7\xc0", 3);
+			Check(IntelAssembler::movzx<64>(Param::rax, Param::ax), "\x48\x0f\xb7\xc0", 4);
+		}
+
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
