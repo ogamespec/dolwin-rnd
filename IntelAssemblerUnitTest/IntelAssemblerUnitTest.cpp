@@ -2418,5 +2418,18 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::sar<16>(Param::al, Param::imm8, 0, 1), "\xd0\xf8", 2);
 		}
 
+		TEST_METHOD(sbb)
+		{
+			Check(IntelAssembler::sbb<16>(Param::al, Param::imm8, 0, 0xaa), "\x1c\xaa", 2);
+			Check(IntelAssembler::sbb<16>(Param::ax, Param::imm16, 0, 0x1234), "\x1d\x34\x12", 3);
+			Check(IntelAssembler::sbb<16>(Param::cl, Param::imm8, 0, 0xaa), "\x80\xd9\xaa", 3);
+			Check(IntelAssembler::sbb<16>(Param::cx, Param::imm16, 0, 0x1234), "\x81\xd9\x34\x12", 4);
+			Check(IntelAssembler::sbb<16>(Param::cx, Param::simm8_as16, 0, -0x56), "\x83\xd9\xaa", 3);
+			Check(IntelAssembler::sbb<16>(Param::m_bp_di, Param::al, 0, 0), "\x18\x03", 2);
+			Check(IntelAssembler::sbb<16>(Param::m_bx, Param::ax, 0, 0), "\x19\x07", 2);
+			Check(IntelAssembler::sbb<16>(Param::al, Param::m_bp_di, 0, 0), "\x1a\x03", 2);
+			Check(IntelAssembler::sbb<16>(Param::ax, Param::m_bx, 0, 0), "\x1b\x07", 2);
+		}
+
 	};
 }
