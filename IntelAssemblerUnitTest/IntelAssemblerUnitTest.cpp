@@ -2305,6 +2305,17 @@ namespace IntelAssemblerUnitTest
 		TEST_METHOD(nop)
 		{
 			Check(IntelAssembler::nop<16>(), "\x90", 1);
+
+			// Table 4-12. Recommended Multi-Byte Sequence of NOP Instruction
+
+			Check(IntelAssembler::nop<32>(Prefix::OperandSize), "\x66\x90", 2);
+			Check(IntelAssembler::nop<32>(Param::m_eax, PtrHint::DwordPtr), "\x0f\x1f\x00", 3);
+			Check(IntelAssembler::nop<32>(Param::m_eax_disp8, PtrHint::DwordPtr, 0), "\x0f\x1f\x40\x00", 4);
+			Check(IntelAssembler::nop<32>(Param::sib_eax_eax_disp8, PtrHint::DwordPtr, 0), "\x0f\x1f\x44\x00\x00", 5);
+			Check(IntelAssembler::nop<32>(Param::sib_eax_eax_disp8, PtrHint::WordPtr, 0), "\x66\x0f\x1f\x44\x00\x00", 6);
+			Check(IntelAssembler::nop<32>(Param::m_eax_disp32, PtrHint::DwordPtr, 0), "\x0f\x1f\x80\x00\x00\x00\x00", 7);
+			Check(IntelAssembler::nop<32>(Param::sib_eax_eax_disp32, PtrHint::DwordPtr, 0), "\x0f\x1f\x84\x00\x00\x00\x00", 8);
+			Check(IntelAssembler::nop<32>(Param::sib_eax_eax_disp32, PtrHint::WordPtr, 0), "\x66\x0f\x1f\x84\x00\x00\x00\x00", 9);
 		}
 	};
 }
