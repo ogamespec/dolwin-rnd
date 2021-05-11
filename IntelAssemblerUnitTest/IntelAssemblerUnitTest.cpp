@@ -3003,6 +3003,31 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::loopne<64>(Param::rel8, 0xaa), "\xe0\xaa", 2);
 		}
 
+		TEST_METHOD(mov_cr)
+		{
+			Check(IntelAssembler::mov<16>(Param::eax, Param::cr0), "\x0f\x20\xc0", 3);
+			Check(IntelAssembler::mov<32>(Param::eax, Param::cr0), "\x0f\x20\xc0", 3);
+			Check(IntelAssembler::mov<64>(Param::rax, Param::cr0), "\x0f\x20\xc0", 3);
+			Check(IntelAssembler::mov<64>(Param::rax, Param::cr8), "\x44\x0f\x20\xc0", 4);
+
+			Check(IntelAssembler::mov<16>(Param::cr0, Param::eax), "\x0f\x22\xc0", 3);
+			Check(IntelAssembler::mov<32>(Param::cr0, Param::eax), "\x0f\x22\xc0", 3);
+			Check(IntelAssembler::mov<64>(Param::cr0, Param::rax), "\x0f\x22\xc0", 3);
+			Check(IntelAssembler::mov<64>(Param::cr8, Param::rax), "\x44\x0f\x22\xc0", 4);
+		}
+
+		TEST_METHOD(mov_dr)
+		{
+			Check(IntelAssembler::mov<16>(Param::eax, Param::dr0), "\x0f\x21\xc0", 3);
+			Check(IntelAssembler::mov<16>(Param::dr0, Param::eax), "\x0f\x23\xc0", 3);
+		}
+
+		TEST_METHOD(mov_tr)
+		{
+			Check(IntelAssembler::mov<16>(Param::eax, Param::tr3), "\x0f\x24\xd8", 3);
+			Check(IntelAssembler::mov<16>(Param::tr3, Param::eax), "\x0f\x26\xd8", 3);
+		}
+
 		TEST_METHOD(out)
 		{
 			Check(IntelAssembler::out<16>(Param::imm8, Param::al, 0xaa), "\xe6\xaa", 2);
