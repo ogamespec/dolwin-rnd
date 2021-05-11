@@ -2723,5 +2723,38 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::_xor<16>(Param::ax, Param::m_bx, 0, 0), "\x33\x07", 2);
 		}
 
+		TEST_METHOD(bswap)
+		{
+			Check(IntelAssembler::bswap<16>(Param::eax), "\x66\x0f\xc8", 3);
+			Check(IntelAssembler::bswap<32>(Param::eax), "\x0f\xc8", 2);
+			Check(IntelAssembler::bswap<64>(Param::rax), "\x48\x0f\xc8", 3);
+		}
+
+		TEST_METHOD(in)
+		{
+			Check(IntelAssembler::in<16>(Param::al, Param::imm8, 0xaa), "\xe4\xaa", 2);
+			Check(IntelAssembler::in<16>(Param::ax, Param::imm8, 0xaa), "\xe5\xaa", 2);
+			Check(IntelAssembler::in<32>(Param::ax, Param::imm8, 0xaa), "\x66\xe5\xaa", 3);
+			Check(IntelAssembler::in<32>(Param::eax, Param::imm8, 0xaa), "\xe5\xaa", 2);
+
+			Check(IntelAssembler::in<16>(Param::al, Param::dx), "\xec", 1);
+			Check(IntelAssembler::in<16>(Param::ax, Param::dx), "\xed", 1);
+			Check(IntelAssembler::in<32>(Param::ax, Param::dx), "\x66\xed", 2);
+			Check(IntelAssembler::in<32>(Param::eax, Param::dx), "\xed", 1);
+		}
+
+		TEST_METHOD(_int)
+		{
+			Check(IntelAssembler::_int<16>(0x21), "\xcd\x21", 2);
+			Check(IntelAssembler::_int<32>(0x21), "\xcd\x21", 2);
+			Check(IntelAssembler::_int<64>(0x21), "\xcd\x21", 2);
+		}
+
+		TEST_METHOD(out)
+		{
+			Check(IntelAssembler::out<16>(Param::imm8, Param::al, 0xaa), "\xe6\xaa", 2);
+			Check(IntelAssembler::out<16>(Param::dx, Param::al), "\xee", 1);
+		}
+
 	};
 }
