@@ -3034,5 +3034,36 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::out<16>(Param::dx, Param::al), "\xee", 1);
 		}
 
+		TEST_METHOD(pop_sr)
+		{
+			Check(IntelAssembler::pop<16>(Param::ds), "\x1f", 1);
+			Check(IntelAssembler::pop<16>(Param::es), "\x07", 1);
+			Check(IntelAssembler::pop<16>(Param::ss), "\x17", 1);
+			Check(IntelAssembler::pop<16>(Param::fs), "\x0f\xa1", 2);
+			Check(IntelAssembler::pop<16>(Param::gs), "\x0f\xa9", 2);
+		}
+
+		TEST_METHOD(push_sr)
+		{
+			Check(IntelAssembler::push<16>(Param::cs), "\x0e", 1);
+			Check(IntelAssembler::push<16>(Param::ds), "\x1e", 1);
+			Check(IntelAssembler::push<16>(Param::es), "\x06", 1);
+			Check(IntelAssembler::push<16>(Param::ss), "\x16", 1);
+			Check(IntelAssembler::push<16>(Param::fs), "\x0f\xa0", 2);
+			Check(IntelAssembler::push<16>(Param::gs), "\x0f\xa8", 2);
+		}
+
+		TEST_METHOD(ret)
+		{
+			Check(IntelAssembler::ret<16>(), "\xc3", 1);
+			Check(IntelAssembler::ret<16>(0x1234), "\xc2\x34\x12", 3);
+		}
+
+		TEST_METHOD(retf)
+		{
+			Check(IntelAssembler::retf<16>(), "\xcb", 1);
+			Check(IntelAssembler::retf<16>(0x1234), "\xca\x34\x12", 3);
+		}
+
 	};
 }
