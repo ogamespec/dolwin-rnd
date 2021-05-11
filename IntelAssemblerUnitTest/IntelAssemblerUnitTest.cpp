@@ -2750,6 +2750,259 @@ namespace IntelAssemblerUnitTest
 			Check(IntelAssembler::_int<64>(0x21), "\xcd\x21", 2);
 		}
 
+		TEST_METHOD(jo)
+		{
+			Check(IntelAssembler::jo<16>(Param::rel8, 0xaa), "\x70\xaa", 2);
+			Check(IntelAssembler::jo<16>(Param::rel16, 0x1234), "\x0f\x80\x34\x12", 4);
+			Check(IntelAssembler::jo<16>(Param::rel32, 0x12345678), "\x66\x0f\x80\x78\x56\x34\x12", 7);
+
+			Check(IntelAssembler::jo<32>(Param::rel8, 0xaa), "\x70\xaa", 2);
+			Check(IntelAssembler::jo<32>(Param::rel16, 0x1234), "\x66\x0f\x80\x34\x12", 5);
+			Check(IntelAssembler::jo<32>(Param::rel32, 0x12345678), "\x0f\x80\x78\x56\x34\x12", 6);
+
+			Check(IntelAssembler::jo<64>(Param::rel8, 0xaa), "\x70\xaa", 2);
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::jo<64>(Param::rel16, 0x1234);
+				});
+			Check(IntelAssembler::jo<64>(Param::rel32, 0x12345678), "\x0f\x80\x78\x56\x34\x12", 6);
+		}
+
+		TEST_METHOD(jno)
+		{
+			Check(IntelAssembler::jno<16>(Param::rel8, 0xaa), "\x71\xaa", 2);
+			Check(IntelAssembler::jno<16>(Param::rel16, 0x1234), "\x0f\x81\x34\x12", 4);
+		}
+
+		TEST_METHOD(jb)
+		{
+			Check(IntelAssembler::jb<16>(Param::rel8, 0xaa), "\x72\xaa", 2);
+			Check(IntelAssembler::jb<16>(Param::rel16, 0x1234), "\x0f\x82\x34\x12", 4);
+		}
+
+		TEST_METHOD(jc)
+		{
+			Check(IntelAssembler::jc<16>(Param::rel8, 0xaa), "\x72\xaa", 2);
+			Check(IntelAssembler::jc<16>(Param::rel16, 0x1234), "\x0f\x82\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnae)
+		{
+			Check(IntelAssembler::jnae<16>(Param::rel8, 0xaa), "\x72\xaa", 2);
+			Check(IntelAssembler::jnae<16>(Param::rel16, 0x1234), "\x0f\x82\x34\x12", 4);
+		}
+
+		TEST_METHOD(jae)
+		{
+			Check(IntelAssembler::jae<16>(Param::rel8, 0xaa), "\x73\xaa", 2);
+			Check(IntelAssembler::jae<16>(Param::rel16, 0x1234), "\x0f\x83\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnb)
+		{
+			Check(IntelAssembler::jnb<16>(Param::rel8, 0xaa), "\x73\xaa", 2);
+			Check(IntelAssembler::jnb<16>(Param::rel16, 0x1234), "\x0f\x83\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnc)
+		{
+			Check(IntelAssembler::jnc<16>(Param::rel8, 0xaa), "\x73\xaa", 2);
+			Check(IntelAssembler::jnc<16>(Param::rel16, 0x1234), "\x0f\x83\x34\x12", 4);
+		}
+
+		TEST_METHOD(je)
+		{
+			Check(IntelAssembler::je<16>(Param::rel8, 0xaa), "\x74\xaa", 2);
+			Check(IntelAssembler::je<16>(Param::rel16, 0x1234), "\x0f\x84\x34\x12", 4);
+		}
+
+		TEST_METHOD(jz)
+		{
+			Check(IntelAssembler::jz<16>(Param::rel8, 0xaa), "\x74\xaa", 2);
+			Check(IntelAssembler::jz<16>(Param::rel16, 0x1234), "\x0f\x84\x34\x12", 4);
+		}
+
+		TEST_METHOD(jne)
+		{
+			Check(IntelAssembler::jne<16>(Param::rel8, 0xaa), "\x75\xaa", 2);
+			Check(IntelAssembler::jne<16>(Param::rel16, 0x1234), "\x0f\x85\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnz)
+		{
+			Check(IntelAssembler::jnz<16>(Param::rel8, 0xaa), "\x75\xaa", 2);
+			Check(IntelAssembler::jnz<16>(Param::rel16, 0x1234), "\x0f\x85\x34\x12", 4);
+		}
+
+		TEST_METHOD(jbe)
+		{
+			Check(IntelAssembler::jbe<16>(Param::rel8, 0xaa), "\x76\xaa", 2);
+			Check(IntelAssembler::jbe<16>(Param::rel16, 0x1234), "\x0f\x86\x34\x12", 4);
+		}
+
+		TEST_METHOD(jna)
+		{
+			Check(IntelAssembler::jna<16>(Param::rel8, 0xaa), "\x76\xaa", 2);
+			Check(IntelAssembler::jna<16>(Param::rel16, 0x1234), "\x0f\x86\x34\x12", 4);
+		}
+
+		TEST_METHOD(ja)
+		{
+			Check(IntelAssembler::ja<16>(Param::rel8, 0xaa), "\x77\xaa", 2);
+			Check(IntelAssembler::ja<16>(Param::rel16, 0x1234), "\x0f\x87\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnbe)
+		{
+			Check(IntelAssembler::jnbe<16>(Param::rel8, 0xaa), "\x77\xaa", 2);
+			Check(IntelAssembler::jnbe<16>(Param::rel16, 0x1234), "\x0f\x87\x34\x12", 4);
+		}
+
+		TEST_METHOD(js)
+		{
+			Check(IntelAssembler::js<16>(Param::rel8, 0xaa), "\x78\xaa", 2);
+			Check(IntelAssembler::js<16>(Param::rel16, 0x1234), "\x0f\x88\x34\x12", 4);
+		}
+
+		TEST_METHOD(jns)
+		{
+			Check(IntelAssembler::jns<16>(Param::rel8, 0xaa), "\x79\xaa", 2);
+			Check(IntelAssembler::jns<16>(Param::rel16, 0x1234), "\x0f\x89\x34\x12", 4);
+		}
+
+		TEST_METHOD(jp)
+		{
+			Check(IntelAssembler::jp<16>(Param::rel8, 0xaa), "\x7a\xaa", 2);
+			Check(IntelAssembler::jp<16>(Param::rel16, 0x1234), "\x0f\x8a\x34\x12", 4);
+		}
+
+		TEST_METHOD(jpe)
+		{
+			Check(IntelAssembler::jpe<16>(Param::rel8, 0xaa), "\x7a\xaa", 2);
+			Check(IntelAssembler::jpe<16>(Param::rel16, 0x1234), "\x0f\x8a\x34\x12", 4);
+		}
+
+		TEST_METHOD(jpo)
+		{
+			Check(IntelAssembler::jpo<16>(Param::rel8, 0xaa), "\x7b\xaa", 2);
+			Check(IntelAssembler::jpo<16>(Param::rel16, 0x1234), "\x0f\x8b\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnp)
+		{
+			Check(IntelAssembler::jnp<16>(Param::rel8, 0xaa), "\x7b\xaa", 2);
+			Check(IntelAssembler::jnp<16>(Param::rel16, 0x1234), "\x0f\x8b\x34\x12", 4);
+		}
+
+		TEST_METHOD(jl)
+		{
+			Check(IntelAssembler::jl<16>(Param::rel8, 0xaa), "\x7c\xaa", 2);
+			Check(IntelAssembler::jl<16>(Param::rel16, 0x1234), "\x0f\x8c\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnge)
+		{
+			Check(IntelAssembler::jnge<16>(Param::rel8, 0xaa), "\x7c\xaa", 2);
+			Check(IntelAssembler::jnge<16>(Param::rel16, 0x1234), "\x0f\x8c\x34\x12", 4);
+		}
+
+		TEST_METHOD(jge)
+		{
+			Check(IntelAssembler::jge<16>(Param::rel8, 0xaa), "\x7d\xaa", 2);
+			Check(IntelAssembler::jge<16>(Param::rel16, 0x1234), "\x0f\x8d\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnl)
+		{
+			Check(IntelAssembler::jnl<16>(Param::rel8, 0xaa), "\x7d\xaa", 2);
+			Check(IntelAssembler::jnl<16>(Param::rel16, 0x1234), "\x0f\x8d\x34\x12", 4);
+		}
+
+		TEST_METHOD(jle)
+		{
+			Check(IntelAssembler::jle<16>(Param::rel8, 0xaa), "\x7e\xaa", 2);
+			Check(IntelAssembler::jle<16>(Param::rel16, 0x1234), "\x0f\x8e\x34\x12", 4);
+		}
+
+		TEST_METHOD(jng)
+		{
+			Check(IntelAssembler::jng<16>(Param::rel8, 0xaa), "\x7e\xaa", 2);
+			Check(IntelAssembler::jng<16>(Param::rel16, 0x1234), "\x0f\x8e\x34\x12", 4);
+		}
+
+		TEST_METHOD(jg)
+		{
+			Check(IntelAssembler::jg<16>(Param::rel8, 0xaa), "\x7f\xaa", 2);
+			Check(IntelAssembler::jg<16>(Param::rel16, 0x1234), "\x0f\x8f\x34\x12", 4);
+		}
+
+		TEST_METHOD(jnle)
+		{
+			Check(IntelAssembler::jnle<16>(Param::rel8, 0xaa), "\x7f\xaa", 2);
+			Check(IntelAssembler::jnle<16>(Param::rel16, 0x1234), "\x0f\x8f\x34\x12", 4);
+		}
+
+		TEST_METHOD(jcxz)
+		{
+			Check(IntelAssembler::jcxz<16>(Param::rel8, 0xaa), "\xe3\xaa", 2);
+			Check(IntelAssembler::jcxz<32>(Param::rel8, 0xaa), "\xe3\xaa", 2);
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::jcxz<64>(Param::rel8, 0xaa);
+				});
+		}
+
+		TEST_METHOD(jecxz)
+		{
+			Check(IntelAssembler::jecxz<16>(Param::rel8, 0xaa), "\xe3\xaa", 2);
+			Check(IntelAssembler::jecxz<32>(Param::rel8, 0xaa), "\xe3\xaa", 2);
+			Check(IntelAssembler::jecxz<64>(Param::rel8, 0xaa), "\xe3\xaa", 2);
+		}
+
+		TEST_METHOD(jrcxz)
+		{
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::jrcxz<16>(Param::rel8, 0xaa);
+				});
+			Assert::ExpectException<char const*>([]() {
+				IntelAssembler::jrcxz<32>(Param::rel8, 0xaa);
+				});
+			Check(IntelAssembler::jrcxz<64>(Param::rel8, 0xaa), "\xe3\xaa", 2);
+		}
+
+		TEST_METHOD(loop)
+		{
+			Check(IntelAssembler::loop<16>(Param::rel8, 0xaa), "\xe2\xaa", 2);
+			Check(IntelAssembler::loop<32>(Param::rel8, 0xaa), "\xe2\xaa", 2);
+			Check(IntelAssembler::loop<64>(Param::rel8, 0xaa), "\xe2\xaa", 2);
+		}
+
+		TEST_METHOD(loopz)
+		{
+			Check(IntelAssembler::loopz<16>(Param::rel8, 0xaa), "\xe1\xaa", 2);
+			Check(IntelAssembler::loopz<32>(Param::rel8, 0xaa), "\xe1\xaa", 2);
+			Check(IntelAssembler::loopz<64>(Param::rel8, 0xaa), "\xe1\xaa", 2);
+		}
+
+		TEST_METHOD(loopnz)
+		{
+			Check(IntelAssembler::loopnz<16>(Param::rel8, 0xaa), "\xe0\xaa", 2);
+			Check(IntelAssembler::loopnz<32>(Param::rel8, 0xaa), "\xe0\xaa", 2);
+			Check(IntelAssembler::loopnz<64>(Param::rel8, 0xaa), "\xe0\xaa", 2);
+		}
+
+		TEST_METHOD(loope)
+		{
+			Check(IntelAssembler::loope<16>(Param::rel8, 0xaa), "\xe1\xaa", 2);
+			Check(IntelAssembler::loope<32>(Param::rel8, 0xaa), "\xe1\xaa", 2);
+			Check(IntelAssembler::loope<64>(Param::rel8, 0xaa), "\xe1\xaa", 2);
+		}
+
+		TEST_METHOD(loopne)
+		{
+			Check(IntelAssembler::loopne<16>(Param::rel8, 0xaa), "\xe0\xaa", 2);
+			Check(IntelAssembler::loopne<32>(Param::rel8, 0xaa), "\xe0\xaa", 2);
+			Check(IntelAssembler::loopne<64>(Param::rel8, 0xaa), "\xe0\xaa", 2);
+		}
+
 		TEST_METHOD(out)
 		{
 			Check(IntelAssembler::out<16>(Param::imm8, Param::al, 0xaa), "\xe6\xaa", 2);
