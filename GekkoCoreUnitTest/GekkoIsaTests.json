@@ -1,0 +1,25 @@
+{
+	"info":
+	{
+		"description": "Gekko ISA testing rules. The `rules` section contains rules for registers before testing and expected values after testing.",
+		"description2": "First the execution is done in interpreter mode and the `before` values are compared with the `expected` values. Then a similar test is performed in recompiler mode."
+	},
+
+	"rules":
+	[
+
+		{
+			"instr": "add",
+			"before": [
+				{ "r1": "#ff"},
+				{ "r2": "#12345678"},
+				{ "r3": "#ABCDEF12"}
+			],
+			"expected": [
+				{ "r1": "#BE02458A" }
+			]
+		}
+
+	]
+
+}
