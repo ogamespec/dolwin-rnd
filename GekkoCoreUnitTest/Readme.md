@@ -11,3 +11,5 @@ First, the correctness of the interpreter is checked, by comparing Gekko registe
 After that, a single instruction is recompiled as a pseudo-segment from a single instruction and the execution in recompilation mode is compared with expected results.
 
 Only the correctness of instructions (register values) is checked during testing. Special modes of operation or exceptions are tested in other tests, so as not to complicate the subject area of testing.
+
+ISA checks are made on the rules from JSON.

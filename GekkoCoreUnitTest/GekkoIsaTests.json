@@ -11,12 +11,390 @@
 		{
 			"instr": "add",
 			"before": [
-				{ "r1": "#ff"},
-				{ "r2": "#12345678"},
-				{ "r3": "#ABCDEF12"}
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#12345678" },
+				{ "r3": "#ABCDEF12" }
 			],
 			"expected": [
 				{ "r1": "#BE02458A" }
+			]
+		},
+
+		{
+			"instr": "add.",
+			"notes": "Result < 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": -5 },
+				{ "r3": -6 }
+			],
+			"expected": [
+				{ "r1": -11 },
+				{ "CR0[LT]": 1 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 }
+			]
+		},
+		{
+			"instr": "add.",
+			"notes": "Result > 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 1 },
+				{ "r3": 2 }
+			],
+			"expected": [
+				{ "r1": 3 },
+				{ "CR0[GT]": 1 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 }
+			]
+		},
+		{
+			"instr": "add.",
+			"notes": "Result == 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 0 },
+				{ "r3": 0 }
+			],
+			"expected": [
+				{ "r1": 0 },
+				{ "CR0[EQ]": 1 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 }
+			]
+		},
+		{
+			"instr": "add.",
+			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 0.",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" }
+			],
+			"expected": [
+				{ "r1": "#FFFFFFFE" },
+				{ "CR0[SO]": 0 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 }
+			]
+		},
+		{
+			"instr": "add.",
+			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 1.",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" },
+				{ "XER[SO]": 1 }
+			],
+			"expected": [
+				{ "r1": "#FFFFFFFE" },
+				{ "CR0[SO]": 1 },
+				{ "XER[SO]": 1 },
+				{ "XER[OV]": 0 }
+			]
+		},
+
+		{
+			"instr": "addo",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 1 },
+				{ "r3": 2 }
+			],
+			"expected": [
+				{ "r1": 3 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 }
+			]			
+		},
+		{
+			"instr": "addo",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" }
+			],
+			"expected": [
+				{ "r1": "#FFFFFFFE" },
+				{ "XER[SO]": 1 },
+				{ "XER[OV]": 1 }
+			]			
+		},
+
+		{
+			"instr": "addo.",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 1 },
+				{ "r3": 2 }
+			],
+			"expected": [
+				{ "r1": 3 },
+				{ "CR0[SO]": 0 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 }
+			]			
+		},
+		{
+			"instr": "addo.",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" }
+			],
+			"expected": [
+				{ "r1": "#FFFFFFFE" },
+				{ "CR0[SO]": 1 },
+				{ "XER[SO]": 1 },
+				{ "XER[OV]": 1 }
+			]
+		},
+
+		{
+			"instr": "addc",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 1 },
+				{ "r3": 2 }
+			],
+			"expected": [
+				{ "r1": 3 },
+				{ "XER[CA]": 0 }
+			]
+		},
+		{
+			"instr": "addc",
+			"notes": "Carry",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#ffffffff" },
+				{ "r3": 2 }
+			],
+			"expected": [
+				{ "r1": 1 },
+				{ "XER[CA]": 1 }
+			]
+		},
+
+		{
+			"instr": "addc.",
+			"notes": "Result < 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": -5 },
+				{ "r3": -6 }
+			],
+			"expected": [
+				{ "r1": -11 },
+				{ "CR0[LT]": 1 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 1 }
+			]
+		},
+		{
+			"instr": "addc.",
+			"notes": "Result > 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 1 },
+				{ "r3": 2 }
+			],
+			"expected": [
+				{ "r1": 3 },
+				{ "CR0[GT]": 1 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 0 }
+			]
+		},
+		{
+			"instr": "addc.",
+			"notes": "Result == 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 0 },
+				{ "r3": 0 }
+			],
+			"expected": [
+				{ "r1": 0 },
+				{ "CR0[EQ]": 1 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 0 }
+			]
+		},
+		{
+			"instr": "addc.",
+			"notes": "Result Overflow. Overflow is copied from XER[SO] (0) + Carry",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" }
+			],
+			"expected": [
+				{ "r1": "#FFFFFFFE" },
+				{ "CR0[SO]": 0 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 0 }
+			]
+		},
+		{
+			"instr": "addc.",
+			"notes": "Result Overflow. Overflow is copied from XER[SO] (1) + Carry",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" },
+				{ "XER[SO]": 1 }
+			],
+			"expected": [
+				{ "r1": "#7FFFFFFE" },
+				{ "CR0[SO]": 1 },
+				{ "XER[SO]": 1 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 1 }
+			]
+		},
+
+		{
+			"instr": "addco",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 1 },
+				{ "r3": 2 }
+			],
+			"expected": [
+				{ "r1": 3 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 0 }
+			]
+		},
+		{
+			"instr": "addco",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" }
+			],
+			"expected": [
+				{ "r1": "#FFFFFFFE" },
+				{ "XER[SO]": 1 },
+				{ "XER[OV]": 1 },
+				{ "XER[CA]": 0 }
+			]
+		},
+
+		{
+			"instr": "addco.",
+			"notes": "Result < 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": -5 },
+				{ "r3": -6 }
+			],
+			"expected": [
+				{ "r1": -11 },
+				{ "CR0[LT]": 1 },
+				{ "CR0[SO]": 0 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 1 }
+			]
+		},
+		{
+			"instr": "addco.",
+			"notes": "Result > 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 1 },
+				{ "r3": 2 }
+			],
+			"expected": [
+				{ "r1": 3 },
+				{ "CR0[GT]": 1 },
+				{ "CR0[SO]": 0 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 0 }
+			]
+		},
+		{
+			"instr": "addco.",
+			"notes": "Result == 0, no overflow",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": 0 },
+				{ "r3": 0 }
+			],
+			"expected": [
+				{ "r1": 0 },
+				{ "CR0[GT]": 1 },
+				{ "CR0[SO]": 0 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 0 }
+			]
+		},
+		{
+			"instr": "addco.",
+			"notes": "Result Overflow + Carry",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" }
+			],
+			"expected": [
+				{ "r1": "#FFFFFFFE" },
+				{ "CR0[SO]": 1 },
+				{ "XER[SO]": 1 },
+				{ "XER[OV]": 1 },
+				{ "XER[CA]": 0 }
+			]
+		},
+		{
+			"instr": "addco.",
+			"notes": "No Overflow, Carry",
+			"before": [
+				{ "pc": "#80000000" },
+				{ "r1": "#ff" },
+				{ "r2": "#7fffffff" },
+				{ "r3": "#7fffffff" }
+			],
+			"expected": [
+				{ "r1": "#7FFFFFFE" },
+				{ "CR0[SO]": 0 },
+				{ "XER[SO]": 0 },
+				{ "XER[OV]": 0 },
+				{ "XER[CA]": 1 }
 			]
 		}
 

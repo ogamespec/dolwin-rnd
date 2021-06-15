@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="GekkoIsaTests">
-      <UniqueIdentifier>{0fec5d82-895c-4316-874e-4e9322c9d7f0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GekkoCoreUnitTest.cpp">
@@ -30,12 +27,6 @@
     <ClCompile Include="FlipperStubs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GekkoIsaTests\Addx.cpp">
-      <Filter>GekkoIsaTests</Filter>
-    </ClCompile>
-    <ClCompile Include="GekkoIsaTests\Addcx.cpp">
-      <Filter>GekkoIsaTests</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -44,5 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.md" />
+    <None Include="GekkoIsaTests.json" />
   </ItemGroup>
 </Project>
