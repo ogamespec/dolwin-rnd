@@ -156,7 +156,7 @@
     <ClCompile Include="ThreadDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SRC\Common\Scripts\VS2019\Common.vcxproj">
+    <ProjectReference Include="..\..\dolwin\SRC\Common\Scripts\VS2019\Common.vcxproj">
       <Project>{8f4f6ae1-b308-4c7f-81fc-4cddd2302c95}</Project>
     </ProjectReference>
   </ItemGroup>

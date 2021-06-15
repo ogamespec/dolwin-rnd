@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntelAssemblerUnitTest", "IntelAssemblerUnitTest.vcxproj", "{93A534BA-F1D5-4AEE-A8DD-B660E5B84298}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntelCore", "..\..\SRC\IntelCore\Scripts\VS2019\IntelCore.vcxproj", "{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntelCore", "..\..\dolwin\SRC\IntelCore\Scripts\VS2019\IntelCore.vcxproj", "{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

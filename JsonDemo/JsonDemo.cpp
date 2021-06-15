@@ -5,14 +5,14 @@
 #include <cassert>
 #include <list>
 
-#include "../../SRC/Common/Json.h"
+#include "../../dolwin/SRC/Common/Json.h"
 
 void DeserializeDemo()
 {
     // Load JSON file
 
     FILE* f = nullptr;
-    fopen_s(&f, "../../Data/DefaultSettings.json", "rb");
+    fopen_s(&f, "../../dolwin/Data/DefaultSettings.json", "rb");
     assert(f);
 
     uint8_t* jsonText = nullptr;        // utf-8

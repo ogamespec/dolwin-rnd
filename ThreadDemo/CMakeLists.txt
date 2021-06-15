@@ -3,7 +3,7 @@ project (ThreadDemo)
 
 add_definitions (-D_LINUX)
 
-add_subdirectory (../../SRC/Common/Scripts Common)
+add_subdirectory (../../dolwin/SRC/Common/Scripts Common)
 
 add_executable (ThreadDemo 
 	ThreadDemo.cpp 

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonDemo", "JsonDemo.vcxproj", "{682D5988-53FC-4F3E-9E84-4CE840FE2F41}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\..\SRC\Common\Scripts\VS2019\Common.vcxproj", "{8F4F6AE1-B308-4C7F-81FC-4CDDD2302C95}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\..\dolwin\SRC\Common\Scripts\VS2019\Common.vcxproj", "{8F4F6AE1-B308-4C7F-81FC-4CDDD2302C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,6 +10,7 @@ void ThreadBoy1(void* param)
 	Girl.Lock();
 
 	printf("Boy1 owning Girl.\n");
+	fflush(stdout);
 
 	Thread::Sleep(100);
 
@@ -21,6 +22,7 @@ void ThreadBoy2(void* param)
 	Girl.Lock();
 
 	printf("Boy2 owning Girl.\n");
+	fflush(stdout);
 
 	Thread::Sleep(100);
 
@@ -30,6 +32,7 @@ void ThreadBoy2(void* param)
 void SpamThread(void* param)
 {
 	printf("Spam! ");
+	fflush(stdout);
 	Thread::Sleep(5);
 }
 
@@ -49,7 +52,7 @@ int main()
 
 	Thread *spam = new Thread(SpamThread, true, nullptr, "Spam");
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		Thread::Sleep(500);
 		spam->Resume();

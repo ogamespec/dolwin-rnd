@@ -169,7 +169,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SRC\IntelCore\Scripts\VS2019\IntelCore.vcxproj">
+    <ProjectReference Include="..\..\dolwin\SRC\IntelCore\Scripts\VS2019\IntelCore.vcxproj">
       <Project>{01481d7e-ee3a-453b-8a98-1cb98df87b5f}</Project>
     </ProjectReference>
   </ItemGroup>

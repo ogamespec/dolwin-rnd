@@ -4,5 +4,5 @@
 #include <string>
 #include <atomic>
 
-#include "../../SRC/Common/Spinlock.h"
-#include "../../SRC/Common/Thread.h"
+#include "../../dolwin/SRC/Common/Spinlock.h"
+#include "../../dolwin/SRC/Common/Thread.h"
