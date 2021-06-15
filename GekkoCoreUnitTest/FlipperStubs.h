@@ -2,6 +2,6 @@
 
 #pragma once
 
-#include "../../SRC/Hardware/HWConfig.h"
-#include "../../SRC/Hardware/PI.h"
-#include "../../SRC/Hardware/MI.h"
+#include "../../dolwin/SRC/Hardware/HWConfig.h"
+#include "../../dolwin/SRC/Hardware/PI.h"
+#include "../../dolwin/SRC/Hardware/MI.h"

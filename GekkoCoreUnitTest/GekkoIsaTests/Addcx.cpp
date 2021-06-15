@@ -16,10 +16,20 @@ namespace GekkoCoreUnitTest
 {
 	TEST_CLASS(GekkoIsaUnitTest)
 	{
+		void FixCWD()
+		{
+			char path[0x100] = { 0 };
+			GetCurrentDirectoryA(sizeof(path), path);
+			std::string newpath = (std::string(path) + "/../../../../dolwin");
+			SetCurrentDirectoryA(newpath.c_str());
+		}
+
 	public:
 
 		TEST_METHOD(Addc)
 		{
+			FixCWD();
+
 			Gekko::Gekko = new Gekko::GekkoCore();
 			uint32_t pc = 0x8000'0000;
 
@@ -70,6 +80,8 @@ namespace GekkoCoreUnitTest
 
 		TEST_METHOD(Addcd)
 		{
+			FixCWD();
+
 			Gekko::Gekko = new Gekko::GekkoCore();
 			uint32_t pc = 0x8000'0000;
 
@@ -189,6 +201,8 @@ namespace GekkoCoreUnitTest
 
 		TEST_METHOD(Addco)
 		{
+			FixCWD();
+
 			Gekko::Gekko = new Gekko::GekkoCore();
 			uint32_t pc = 0x8000'0000;
 
@@ -245,6 +259,8 @@ namespace GekkoCoreUnitTest
 
 		TEST_METHOD(Addcod)
 		{
+			FixCWD();
+
 			Gekko::Gekko = new Gekko::GekkoCore();
 			uint32_t pc = 0x8000'0000;
 

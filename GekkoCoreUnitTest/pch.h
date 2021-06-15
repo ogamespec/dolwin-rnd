@@ -8,14 +8,15 @@
 #include <map>
 #include <cassert>
 #include <atomic>
+#include <unordered_map>
 
-#include "../../SRC/Common/ByteSwap.h"
-#include "../../SRC/Common/Spinlock.h"
-#include "../../SRC/Common/Thread.h"
-#include "../../SRC/Common/Json.h"
-#include "../../SRC/Common/Jdi.h"
+#include "../../dolwin/SRC/Common/ByteSwap.h"
+#include "../../dolwin/SRC/Common/Spinlock.h"
+#include "../../dolwin/SRC/Common/Thread.h"
+#include "../../dolwin/SRC/Common/Json.h"
+#include "../../dolwin/SRC/Common/Jdi.h"
 
-#include "../../SRC/GekkoCore/Gekko.h"
-#include "../../SRC/GekkoCore/GekkoDisasm.h"
+#include "../../dolwin/SRC/GekkoCore/Gekko.h"
+#include "../../dolwin/SRC/GekkoCore/GekkoDisasm.h"
 
 #include "FlipperStubs.h"

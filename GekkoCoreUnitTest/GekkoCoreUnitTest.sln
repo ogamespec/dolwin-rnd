@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GekkoCoreUnitTest", "GekkoCoreUnitTest.vcxproj", "{7CD1150C-301E-41D7-91C3-2D38347C84AA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GekkoCore", "..\..\SRC\GekkoCore\Scripts\VS2019\GekkoCore.vcxproj", "{289C41EF-117B-478C-A3F6-84906E88209E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GekkoCore", "..\..\dolwin\SRC\GekkoCore\Scripts\VS2019\GekkoCore.vcxproj", "{289C41EF-117B-478C-A3F6-84906E88209E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\..\SRC\Common\Scripts\VS2019\Common.vcxproj", "{8F4F6AE1-B308-4C7F-81FC-4CDDD2302C95}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\..\dolwin\SRC\Common\Scripts\VS2019\Common.vcxproj", "{8F4F6AE1-B308-4C7F-81FC-4CDDD2302C95}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntelCore", "..\..\dolwin\SRC\IntelCore\Scripts\VS2019\IntelCore.vcxproj", "{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{8F4F6AE1-B308-4C7F-81FC-4CDDD2302C95}.Release|x64.Build.0 = Release|x64
 		{8F4F6AE1-B308-4C7F-81FC-4CDDD2302C95}.Release|x86.ActiveCfg = Release|Win32
 		{8F4F6AE1-B308-4C7F-81FC-4CDDD2302C95}.Release|x86.Build.0 = Release|Win32
+		{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}.Debug|x64.ActiveCfg = Debug|x64
+		{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}.Debug|x64.Build.0 = Debug|x64
+		{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}.Debug|x86.ActiveCfg = Debug|Win32
+		{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}.Debug|x86.Build.0 = Debug|Win32
+		{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}.Release|x64.ActiveCfg = Release|x64
+		{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}.Release|x64.Build.0 = Release|x64
+		{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}.Release|x86.ActiveCfg = Release|Win32
+		{01481D7E-EE3A-453B-8A98-1CB98DF87B5F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

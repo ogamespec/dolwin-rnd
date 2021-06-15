@@ -8,10 +8,20 @@ namespace GekkoCoreUnitTest
 {
 	TEST_CLASS(GekkoCoreUnitTest)
 	{
+		void FixCWD()
+		{
+			char path[0x100] = { 0 };
+			GetCurrentDirectoryA(sizeof(path), path);
+			std::string newpath = (std::string(path) + "/../../../../dolwin");
+			SetCurrentDirectoryA(newpath.c_str());
+		}
+
 	public:
 		
 		TEST_METHOD(GekkoCoreInstance)
 		{
+			FixCWD();
+
 			Gekko::GekkoCore* core = new Gekko::GekkoCore();
 
 			delete core;
@@ -40,47 +50,6 @@ namespace GekkoCoreUnitTest
 			Gekko::Analyzer::Analyze(0, instr, &info);
 
 			DumpGekkoAnalyzeInfo(&info);
-		}
-
-		TEST_METHOD(TestDisasm)
-		{
-			FILE* f = nullptr;
-
-			fopen_s(&f, "Data\\test.bin", "rb");
-			assert(f);
-
-			fseek(f, 0, SEEK_END);
-			size_t size = ftell(f);
-			fseek(f, 0, SEEK_SET);
-
-			uint8_t* testCode = new uint8_t[size];
-
-			fread(testCode, 1, size, f);
-			fclose(f);
-
-			fopen_s(&f, "testNew.txt", "wt");
-			assert(f);
-
-			uint32_t pc = 0x80000000;
-			size_t instrCount = size / 4;
-			uint32_t* instrPtr = (uint32_t*)testCode;
-
-			while (instrCount--)
-			{
-				uint32_t instr = *instrPtr++;
-
-				Gekko::AnalyzeInfo info = { 0 };
-
-				Gekko::Analyzer::Analyze(pc, instr, &info);
-				std::string disasmText = Gekko::GekkoDisasm::Disasm(pc, &info, true, true);
-
-				fprintf(f, "%s\n", disasmText.c_str());
-
-				pc += 4;
-			}
-
-			delete[] testCode;
-			fclose(f);
 		}
 
 	};

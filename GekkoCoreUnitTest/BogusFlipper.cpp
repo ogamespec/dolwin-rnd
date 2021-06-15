@@ -1,5 +1,5 @@
 // The module is needed for minimal support for Flipper.
-// In fact, only a rudimentary MI is needed and possibly interrupts.
+// In fact, only a rudimentary PI is needed and possibly interrupts.
 
 #include "pch.h"
 

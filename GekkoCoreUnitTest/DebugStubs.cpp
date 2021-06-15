@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "../../SRC/Debugger/Debugger.h"
+#include "../../dolwin/SRC/Debugger/Debugger.h"
 
 namespace Debug
 {
