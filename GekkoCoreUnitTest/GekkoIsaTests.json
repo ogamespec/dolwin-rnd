@@ -10,6 +10,7 @@
 
 		{
 			"instr": "add",
+			"param": [ "r1", "r2", "r3" ],
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -23,6 +24,7 @@
 
 		{
 			"instr": "add.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result < 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -39,6 +41,7 @@
 		},
 		{
 			"instr": "add.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result > 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -55,6 +58,7 @@
 		},
 		{
 			"instr": "add.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result == 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -71,6 +75,7 @@
 		},
 		{
 			"instr": "add.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 0.",
 			"before": [
 				{ "pc": "#80000000" },
@@ -87,6 +92,7 @@
 		},
 		{
 			"instr": "add.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 1.",
 			"before": [
 				{ "pc": "#80000000" },
@@ -105,6 +111,7 @@
 
 		{
 			"instr": "addo",
+			"param": [ "r1", "r2", "r3" ],
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -115,10 +122,11 @@
 				{ "r1": 3 },
 				{ "XER[SO]": 0 },
 				{ "XER[OV]": 0 }
-			]			
+			]
 		},
 		{
 			"instr": "addo",
+			"param": [ "r1", "r2", "r3" ],
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -129,11 +137,12 @@
 				{ "r1": "#FFFFFFFE" },
 				{ "XER[SO]": 1 },
 				{ "XER[OV]": 1 }
-			]			
+			]
 		},
 
 		{
 			"instr": "addo.",
+			"param": [ "r1", "r2", "r3" ],
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -145,10 +154,11 @@
 				{ "CR0[SO]": 0 },
 				{ "XER[SO]": 0 },
 				{ "XER[OV]": 0 }
-			]			
+			]
 		},
 		{
 			"instr": "addo.",
+			"param": [ "r1", "r2", "r3" ],
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -165,6 +175,7 @@
 
 		{
 			"instr": "addc",
+			"param": [ "r1", "r2", "r3" ],
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -178,6 +189,7 @@
 		},
 		{
 			"instr": "addc",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Carry",
 			"before": [
 				{ "pc": "#80000000" },
@@ -193,6 +205,7 @@
 
 		{
 			"instr": "addc.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result < 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -210,6 +223,7 @@
 		},
 		{
 			"instr": "addc.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result > 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -227,6 +241,7 @@
 		},
 		{
 			"instr": "addc.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result == 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -244,6 +259,7 @@
 		},
 		{
 			"instr": "addc.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result Overflow. Overflow is copied from XER[SO] (0) + Carry",
 			"before": [
 				{ "pc": "#80000000" },
@@ -261,6 +277,7 @@
 		},
 		{
 			"instr": "addc.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result Overflow. Overflow is copied from XER[SO] (1) + Carry",
 			"before": [
 				{ "pc": "#80000000" },
@@ -280,6 +297,7 @@
 
 		{
 			"instr": "addco",
+			"param": [ "r1", "r2", "r3" ],
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -295,6 +313,7 @@
 		},
 		{
 			"instr": "addco",
+			"param": [ "r1", "r2", "r3" ],
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -311,6 +330,7 @@
 
 		{
 			"instr": "addco.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result < 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -329,6 +349,7 @@
 		},
 		{
 			"instr": "addco.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result > 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -347,6 +368,7 @@
 		},
 		{
 			"instr": "addco.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result == 0, no overflow",
 			"before": [
 				{ "pc": "#80000000" },
@@ -365,6 +387,7 @@
 		},
 		{
 			"instr": "addco.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "Result Overflow + Carry",
 			"before": [
 				{ "pc": "#80000000" },
@@ -382,6 +405,7 @@
 		},
 		{
 			"instr": "addco.",
+			"param": [ "r1", "r2", "r3" ],
 			"notes": "No Overflow, Carry",
 			"before": [
 				{ "pc": "#80000000" },
