@@ -20,4 +20,8 @@
 #include "../../dolwin/SRC/GekkoCore/GekkoDisasm.h"
 #include "../../dolwin/SRC/GekkoCore/GekkoAssembler.h"
 
-#include "FlipperStubs.h"
+#include "../../dolwin/SRC/Hardware/HWConfig.h"
+#include "../../dolwin/SRC/Hardware/PI.h"
+#include "../../dolwin/SRC/Hardware/MI.h"
+
+#include "../../dolwin/SRC/Debugger/Debugger.h"

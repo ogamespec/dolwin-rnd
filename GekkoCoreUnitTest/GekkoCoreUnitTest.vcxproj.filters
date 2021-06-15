@@ -30,13 +30,7 @@
     <ClCompile Include="FlipperStubs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BogusFlipper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GekkoIsaTests\Addx.cpp">
-      <Filter>GekkoIsaTests</Filter>
-    </ClCompile>
-    <ClCompile Include="GekkoIsaTests\BitFactoryTest.cpp">
       <Filter>GekkoIsaTests</Filter>
     </ClCompile>
     <ClCompile Include="GekkoIsaTests\Addcx.cpp">
@@ -46,12 +40,6 @@
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FlipperStubs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GekkoIsaTests\BitFactory.h">
-      <Filter>GekkoIsaTests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

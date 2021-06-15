@@ -1,9 +1,37 @@
-// Flipper Stubs
+// The module is needed for minimal support for Flipper.
 
 #include "pch.h"
 
 PIControl pi;
 MIControl mi;
+
+namespace Flipper
+{
+    class BogusFlipper
+    {
+    public:
+        BogusFlipper();
+        ~BogusFlipper();
+    };
+
+    BogusFlipper::BogusFlipper()
+    {
+        HWConfig* config = new HWConfig;
+
+        config->ramsize = RAMSIZE;
+
+        MIOpen(config);
+
+        delete config;
+    }
+
+    BogusFlipper::~BogusFlipper()
+    {
+        MIClose();
+    }
+
+    BogusFlipper BogusHW;
+}
 
 void PIReadByte(uint32_t pa, uint32_t* reg)
 {

@@ -8,7 +8,6 @@
 
 #include "../pch.h"
 #include "CppUnitTest.h"
-#include "BitFactory.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
