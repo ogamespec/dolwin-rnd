@@ -153,6 +153,8 @@
   <ItemGroup>
     <ClCompile Include="DebugStubs.cpp" />
     <ClCompile Include="DspAdpcmDecoder.cpp" />
+    <ClCompile Include="FlipperStubs.cpp" />
+    <ClCompile Include="GekkoCoreStubs.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -167,10 +169,10 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SRC\Common\Scripts\VS2019\Common.vcxproj">
+    <ProjectReference Include="..\..\dolwin\SRC\Common\Scripts\VS2019\Common.vcxproj">
       <Project>{8f4f6ae1-b308-4c7f-81fc-4cddd2302c95}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\SRC\DSP\Scripts\VS2019\DSP.vcxproj">
+    <ProjectReference Include="..\..\dolwin\SRC\DSP\Scripts\VS2019\DSP.vcxproj">
       <Project>{0336d67c-249d-4c48-bd80-8e05ce711a58}</Project>
     </ProjectReference>
   </ItemGroup>

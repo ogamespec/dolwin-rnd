@@ -24,6 +24,12 @@
     <ClCompile Include="DebugStubs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FlipperStubs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GekkoCoreStubs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.md" />
