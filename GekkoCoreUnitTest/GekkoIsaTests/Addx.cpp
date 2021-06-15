@@ -31,23 +31,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko = new Gekko::GekkoCore();
 			uint32_t pc = 0x8000'0000;
 
-			// Disasm
-
-			BitFactory bf;
-
-			bf << Bits(31, 6);	// Primary opcode
-			bf << Bits(1, 5);
-			bf << Bits(2, 5);
-			bf << Bits(3, 5);
-			bf << Bits(0, 1);	// OE
-			bf << Bits(266, 9);		// Secondary opcode
-			bf << Bits(0, 1);	// Rc
-
-			Gekko::AnalyzeInfo info = { 0 };
-			Gekko::Analyzer::Analyze(pc, bf.GetBits32(), &info);
-			std::string text = Gekko::GekkoDisasm::Disasm(pc, &info, true, true);
-
-			Logger::WriteMessage(text.c_str());
+			uint32_t instr = Gekko::GekkoAssembler::add(1, 2, 3);
 
 			// Interpreter
 
@@ -55,7 +39,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 0x12345678;
 			Gekko::Gekko->regs.gpr[3] = 0xABCDEF12;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 0xBE02458A);
 
@@ -69,23 +53,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko = new Gekko::GekkoCore();
 			uint32_t pc = 0x8000'0000;
 
-			// Disasm
-
-			BitFactory bf;
-
-			bf << Bits(31, 6);	// Primary opcode
-			bf << Bits(1, 5);
-			bf << Bits(2, 5);
-			bf << Bits(3, 5);
-			bf << Bits(0, 1);	// OE
-			bf << Bits(266, 9);		// Secondary opcode
-			bf << Bits(1, 1);	// Rc
-
-			Gekko::AnalyzeInfo info = { 0 };
-			Gekko::Analyzer::Analyze(pc, bf.GetBits32(), &info);
-			std::string text = Gekko::GekkoDisasm::Disasm(pc, &info, true, true);
-
-			Logger::WriteMessage(text.c_str());
+			uint32_t instr = Gekko::GekkoAssembler::add_d(1, 2, 3);
 
 			// Interpreter
 
@@ -99,7 +67,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = -5;
 			Gekko::Gekko->regs.gpr[3] = -6;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == -11);
 			Assert::IsTrue((Gekko::Gekko->regs.cr & GEKKO_CR0_LT) != 0);
@@ -116,7 +84,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 1;
 			Gekko::Gekko->regs.gpr[3] = 2;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 3);
 			Assert::IsTrue((Gekko::Gekko->regs.cr & GEKKO_CR0_GT) != 0);
@@ -133,7 +101,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 0;
 			Gekko::Gekko->regs.gpr[3] = 0;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 0);
 			Assert::IsTrue((Gekko::Gekko->regs.cr & GEKKO_CR0_EQ) != 0);
@@ -147,7 +115,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 0x7fff'ffff;
 			Gekko::Gekko->regs.gpr[3] = 0x7fff'ffff;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 0xFFFFFFFE);
 			Assert::IsTrue((Gekko::Gekko->regs.cr & GEKKO_CR0_SO) == 0);
@@ -161,7 +129,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 0x7fff'ffff;
 			Gekko::Gekko->regs.gpr[3] = 0x7fff'ffff;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 0xFFFFFFFE);
 			Assert::IsTrue((Gekko::Gekko->regs.cr & GEKKO_CR0_SO) != 0);
@@ -178,23 +146,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko = new Gekko::GekkoCore();
 			uint32_t pc = 0x8000'0000;
 
-			// Disasm
-
-			BitFactory bf;
-
-			bf << Bits(31, 6);	// Primary opcode
-			bf << Bits(1, 5);
-			bf << Bits(2, 5);
-			bf << Bits(3, 5);
-			bf << Bits(1, 1);	// OE
-			bf << Bits(266, 9);		// Secondary opcode
-			bf << Bits(0, 1);	// Rc
-
-			Gekko::AnalyzeInfo info = { 0 };
-			Gekko::Analyzer::Analyze(pc, bf.GetBits32(), &info);
-			std::string text = Gekko::GekkoDisasm::Disasm(pc, &info, true, true);
-
-			Logger::WriteMessage(text.c_str());
+			uint32_t instr = Gekko::GekkoAssembler::addo(1, 2, 3);
 
 			// Interpreter
 
@@ -205,7 +157,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 1;
 			Gekko::Gekko->regs.gpr[3] = 2;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 3);
 			Assert::IsTrue((Gekko::Gekko->regs.spr[(int)Gekko::SPR::XER] & GEKKO_XER_SO) == 0);
@@ -215,7 +167,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 0x7fff'ffff;
 			Gekko::Gekko->regs.gpr[3] = 0x7fff'ffff;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 0xFFFFFFFE);
 			Assert::IsTrue((Gekko::Gekko->regs.spr[(int)Gekko::SPR::XER] & GEKKO_XER_SO) != 0);
@@ -231,23 +183,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko = new Gekko::GekkoCore();
 			uint32_t pc = 0x8000'0000;
 
-			// Disasm
-
-			BitFactory bf;
-
-			bf << Bits(31, 6);	// Primary opcode
-			bf << Bits(1, 5);
-			bf << Bits(2, 5);
-			bf << Bits(3, 5);
-			bf << Bits(1, 1);	// OE
-			bf << Bits(266, 9);		// Secondary opcode
-			bf << Bits(1, 1);	// Rc
-
-			Gekko::AnalyzeInfo info = { 0 };
-			Gekko::Analyzer::Analyze(pc, bf.GetBits32(), &info);
-			std::string text = Gekko::GekkoDisasm::Disasm(pc, &info, true, true);
-
-			Logger::WriteMessage(text.c_str());
+			uint32_t instr = Gekko::GekkoAssembler::addo_d(1, 2, 3);
 
 			// Interpreter
 
@@ -259,7 +195,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 1;
 			Gekko::Gekko->regs.gpr[3] = 2;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 3);
 			Assert::IsTrue((Gekko::Gekko->regs.cr & GEKKO_CR0_SO) == 0);
@@ -270,7 +206,7 @@ namespace GekkoCoreUnitTest
 			Gekko::Gekko->regs.gpr[2] = 0x7fff'ffff;
 			Gekko::Gekko->regs.gpr[3] = 0x7fff'ffff;
 
-			Gekko::Gekko->ExecuteOpcodeDebug(pc, bf.GetBits32());
+			Gekko::Gekko->ExecuteOpcodeDebug(pc, instr);
 
 			Assert::IsTrue(Gekko::Gekko->regs.gpr[1] == 0xFFFFFFFE);
 			Assert::IsTrue((Gekko::Gekko->regs.cr & GEKKO_CR0_SO) != 0);

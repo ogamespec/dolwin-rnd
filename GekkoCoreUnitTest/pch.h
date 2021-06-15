@@ -18,5 +18,6 @@
 
 #include "../../dolwin/SRC/GekkoCore/Gekko.h"
 #include "../../dolwin/SRC/GekkoCore/GekkoDisasm.h"
+#include "../../dolwin/SRC/GekkoCore/GekkoAssembler.h"
 
 #include "FlipperStubs.h"
