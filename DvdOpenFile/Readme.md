@@ -1,8 +1,10 @@
 # DvdOpenFile
 
-This demo is designed to test the operation of the DVDConvertPathToEntrynum method.
+This demo is designed to test the operation of the `DVDConvertPathToEntrynum` method.
 
-The DVDConvertPathToEntrynum method is used to convert the file path to the index of the FST table record, which contains service information about the DVD file system.
+The `DVDConvertPathToEntrynum` method is used to convert the file path to the index of the FST table record, which contains service information about the DVD file system.
+
+See more: https://github.com/ogamespec/dolwin-docs/blob/master/RE/DVD/DVDConvertPathToEntrynum.md
 
 ## Usage
 

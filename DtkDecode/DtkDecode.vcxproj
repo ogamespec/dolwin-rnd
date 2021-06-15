@@ -147,11 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\SRC\DVD\DvdAdpcmDecode.cpp" />
+    <ClCompile Include="..\..\dolwin\SRC\DVD\DvdAdpcmDecode.cpp" />
     <ClCompile Include="DtkDecode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\SRC\DVD\DvdAdpcmDecode.h" />
+    <ClInclude Include="..\..\dolwin\SRC\DVD\DvdAdpcmDecode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.md" />

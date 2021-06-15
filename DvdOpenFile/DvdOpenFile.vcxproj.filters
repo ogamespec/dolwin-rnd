@@ -21,6 +21,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.md" />
-    <None Include="..\..\Docs\RE\DVDConvertPathToEntrynum.md" />
   </ItemGroup>
 </Project>

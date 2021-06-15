@@ -3,7 +3,7 @@
 #include <iostream>
 #include <intrin.h>
 
-#include "../../SRC/DVD/DvdStructs.h"
+#include "../../dolwin/SRC/DVD/DvdStructs.h"
 
 #define NameOffset(hi, lo) (((uint32_t)(hi) << 16) | (lo))
 

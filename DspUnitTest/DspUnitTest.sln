@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DspUnitTest", "DspUnitTest.vcxproj", "{8E2565C8-9E6F-4336-B887-3B1AC8CD51DA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSP", "..\..\SRC\DSP\Scripts\VS2019\DSP.vcxproj", "{0336D67C-249D-4C48-BD80-8E05CE711A58}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DSP", "..\..\dolwin\SRC\DSP\Scripts\VS2019\DSP.vcxproj", "{0336D67C-249D-4C48-BD80-8E05CE711A58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

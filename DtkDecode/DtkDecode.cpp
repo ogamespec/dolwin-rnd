@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../SRC/DVD/DvdAdpcmDecode.h"
+#include "../../dolwin/SRC/DVD/DvdAdpcmDecode.h"
 
 int main(int argc, char **argv)
 {
