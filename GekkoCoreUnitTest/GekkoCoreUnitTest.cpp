@@ -156,26 +156,35 @@ namespace GekkoCoreUnitTest
 			{
 				return n->value.AsUint32;
 			}
-			else if (n->type == Json::ValueType::Float)
-			{
-				return (uint32_t)(int32_t)n->value.AsFloat;
-			}
 			else
 			{
 				Assert::Fail();
 			}
 		}
 
-		double GetFRegVal(Json::Value* n)
+		FPREG GetFRegVal(Json::Value* n)
 		{
+			FPREG fr;
+
 			if (n->type == Json::ValueType::Float)
 			{
-				return (double)n->value.AsFloat;
+				fr.dbl = (double)n->value.AsFloat;
+			}
+			else if (n->type == Json::ValueType::Int)
+			{
+				fr.dbl = (double)n->value.AsInt;
+			}
+			else if (n->type == Json::ValueType::String)
+			{
+				std::string str = Util::WstringToString(n->value.AsString);
+				fr.uval = strtoull(str.c_str(), nullptr, 0);
 			}
 			else
 			{
 				Assert::Fail();
 			}
+
+			return fr;
 		}
 
 		void MemSet(Gekko::GekkoCore* core, Json::Value* mem)
@@ -244,11 +253,11 @@ namespace GekkoCoreUnitTest
 				}
 				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'f' && r->name[1] == 'r')
 				{
-					core->regs.fpr[atoi(r->name + 2)].dbl = GetFRegVal(r);
+					core->regs.fpr[atoi(r->name + 2)] = GetFRegVal(r);
 				}
 				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'p' && r->name[1] == 's')
 				{
-					core->regs.ps1[atoi(r->name + 2)].dbl = GetFRegVal(r);
+					core->regs.ps1[atoi(r->name + 2)] = GetFRegVal(r);
 				}
 
 				else if (name == "CR0[LT]")
@@ -286,6 +295,98 @@ namespace GekkoCoreUnitTest
 				{
 					if (r->value.AsInt) core->regs.spr[Gekko::SPR::XER] |= GEKKO_XER_CA;
 					else core->regs.spr[Gekko::SPR::XER] &= ~GEKKO_XER_CA;
+				}
+
+				else if (name == "MSR[POW]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_POW;
+					else core->regs.msr &= ~MSR_POW;
+				}
+				else if (name == "MSR[ILE]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_ILE;
+					else core->regs.msr &= ~MSR_ILE;
+				}
+				else if (name == "MSR[EE]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_EE;
+					else core->regs.msr &= ~MSR_EE;
+				}
+				else if (name == "MSR[PR]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_PR;
+					else core->regs.msr &= ~MSR_PR;
+				}
+				else if (name == "MSR[FP]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_FP;
+					else core->regs.msr &= ~MSR_FP;
+				}
+				else if (name == "MSR[ME]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_ME;
+					else core->regs.msr &= ~MSR_ME;
+				}
+				else if (name == "MSR[FE0]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_FE0;
+					else core->regs.msr &= ~MSR_FE0;
+				}
+				else if (name == "MSR[SE]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_SE;
+					else core->regs.msr &= ~MSR_SE;
+				}
+				else if (name == "MSR[BE]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_BE;
+					else core->regs.msr &= ~MSR_BE;
+				}
+				else if (name == "MSR[FE1]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_FE1;
+					else core->regs.msr &= ~MSR_FE1;
+				}
+				else if (name == "MSR[IP]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_IP;
+					else core->regs.msr &= ~MSR_IP;
+				}
+				else if (name == "MSR[IR]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_IR;
+					else core->regs.msr &= ~MSR_IR;
+				}
+				else if (name == "MSR[DR]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_DR;
+					else core->regs.msr &= ~MSR_DR;
+				}
+				else if (name == "MSR[PM]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_PM;
+					else core->regs.msr &= ~MSR_PM;
+				}
+				else if (name == "MSR[RI]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_RI;
+					else core->regs.msr &= ~MSR_RI;
+				}
+				else if (name == "MSR[LE]")
+				{
+					if (r->value.AsInt) core->regs.msr |= MSR_LE;
+					else core->regs.msr &= ~MSR_LE;
+				}
+
+				else if (name == "HID2[LSQE]")
+				{
+					if (r->value.AsInt) core->regs.spr[Gekko::SPR::HID2] |= HID2_LSQE;
+					else core->regs.spr[Gekko::SPR::HID2] &= ~HID2_LSQE;
+				}
+				else if (name == "HID2[PSE]")
+				{
+					if (r->value.AsInt) core->regs.spr[Gekko::SPR::HID2] |= HID2_PSE;
+					else core->regs.spr[Gekko::SPR::HID2] &= ~HID2_PSE;
 				}
 
 				else if (name == "mem")
@@ -886,11 +987,11 @@ namespace GekkoCoreUnitTest
 				}
 				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'f' && r->name[1] == 'r')
 				{
-					Assert::IsTrue(core->regs.fpr[atoi(r->name + 2)].dbl == GetFRegVal(r));
+					Assert::IsTrue(core->regs.fpr[atoi(r->name + 2)].uval == GetFRegVal(r).uval);
 				}
 				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'p' && r->name[1] == 's')
 				{
-					Assert::IsTrue(core->regs.ps1[atoi(r->name + 2)].dbl == GetFRegVal(r));
+					Assert::IsTrue(core->regs.ps1[atoi(r->name + 2)].uval == GetFRegVal(r).uval);
 				}
 
 				else if (name == "CR0[LT]")
@@ -928,6 +1029,98 @@ namespace GekkoCoreUnitTest
 				{
 					if (r->value.AsInt) Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_CA) != 0);
 					else Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_CA) == 0);
+				}
+
+				else if (name == "MSR[POW]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_POW) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_POW) == 0);
+				}
+				else if (name == "MSR[ILE]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_ILE) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_ILE) == 0);
+				}
+				else if (name == "MSR[EE]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_EE) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_EE) == 0);
+				}
+				else if (name == "MSR[PR]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_PR) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_PR) == 0);
+				}
+				else if (name == "MSR[FP]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_FP) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_FP) == 0);
+				}
+				else if (name == "MSR[ME]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_ME) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_ME) == 0);
+				}
+				else if (name == "MSR[FE0]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_FE0) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_FE0) == 0);
+				}
+				else if (name == "MSR[SE]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_SE) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_SE) == 0);
+				}
+				else if (name == "MSR[BE]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_BE) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_BE) == 0);
+				}
+				else if (name == "MSR[FE1]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_FE1) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_FE1) == 0);
+				}
+				else if (name == "MSR[IP]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_IP) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_IP) == 0);
+				}
+				else if (name == "MSR[IR]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_IR) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_IR) == 0);
+				}
+				else if (name == "MSR[DR]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_DR) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_DR) == 0);
+				}
+				else if (name == "MSR[PM]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_PM) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_PM) == 0);
+				}
+				else if (name == "MSR[RI]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_RI) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_RI) == 0);
+				}
+				else if (name == "MSR[LE]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.msr & MSR_LE) != 0);
+					else Assert::IsTrue((core->regs.msr & MSR_LE) == 0);
+				}
+
+				else if (name == "HID2[LSQE]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.spr[Gekko::SPR::HID2] & HID2_LSQE) != 0);
+					else Assert::IsTrue((core->regs.spr[Gekko::SPR::HID2] & HID2_LSQE) == 0);
+				}
+				else if (name == "HID2[PSE]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.spr[Gekko::SPR::HID2] & HID2_PSE) != 0);
+					else Assert::IsTrue((core->regs.spr[Gekko::SPR::HID2] & HID2_PSE) == 0);
 				}
 
 				else if (name == "mem")
