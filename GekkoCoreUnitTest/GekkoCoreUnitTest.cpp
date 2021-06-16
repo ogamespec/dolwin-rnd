@@ -642,11 +642,11 @@ namespace GekkoCoreUnitTest
 			if (notes)
 			{
 				std::wstring notesWstr(notes->value.AsString);
-				Logger::WriteMessage(("Dispatching instruction (interpreter mode): " + disassembledInstr + " (" + Util::WstringToString(notesWstr) + ")\n").c_str());
+				Logger::WriteMessage((disassembledInstr + " (" + Util::WstringToString(notesWstr) + ")\n").c_str());
 			}
 			else
 			{
-				Logger::WriteMessage(("Dispatching instruction (interpreter mode): " + disassembledInstr + "\n").c_str());
+				Logger::WriteMessage((disassembledInstr + "\n").c_str());
 			}
 
 			// Emit instruction at `pc`
@@ -748,6 +748,8 @@ namespace GekkoCoreUnitTest
 			{
 				if (std::string((*s)->name) == "rules")
 				{
+					Logger::WriteMessage("Dispatching instructions (interpreter mode):\n");
+
 					for (auto i = (*s)->children.begin(); i != (*s)->children.end(); ++i)
 					{
 						// Get key sections to check the next instruction
@@ -806,9 +808,9 @@ namespace GekkoCoreUnitTest
 						CheckContext(core, expected);
 
 						delete core;
-
-						// TODO: Repeat the same in recompiler mode.
 					}
+
+					// TODO: Repeat the same in recompiler mode.
 				}
 			}
 		}
