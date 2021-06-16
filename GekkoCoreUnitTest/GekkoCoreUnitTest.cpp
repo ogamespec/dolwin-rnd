@@ -666,6 +666,20 @@ namespace GekkoCoreUnitTest
 			core->interp->ExecuteOpcode();
 		}
 
+		void DumpSegment(Gekko::CodeSegment* seg)
+		{
+			Assert::IsNotNull(seg);
+
+			for (auto i = 0; i < seg->code.size(); i++)
+			{
+				char pyhex[0x10];
+
+				sprintf_s(pyhex, sizeof(pyhex), "\\x%02x", seg->code.data()[i]);
+				Logger::WriteMessage(pyhex);
+			}
+			Logger::WriteMessage("\n");
+		}
+
 		void DispatchAsRecompiler(Gekko::GekkoCore* core, Json::Value* instr, Json::Value* param, Json::Value* notes)
 		{
 			std::string instrName = Util::WstringToString(instr->value.AsString);
@@ -708,8 +722,12 @@ namespace GekkoCoreUnitTest
 
 			// Execute a single instruction with recompiler
 
+			uint32_t origPc = core->regs.pc;
+
 			core->jitc->maxInstructions = 1;
 			core->jitc->Execute();
+
+			DumpSegment(core->jitc->SegmentCompiled(origPc));
 		}
 
 		void CheckContext(Gekko::GekkoCore* core, Json::Value* expected)
