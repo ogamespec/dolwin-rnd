@@ -904,7 +904,7 @@ namespace GekkoCoreUnitTest
 						// Instantiate GekkoCore
 
 						Gekko::GekkoCore* core = new Gekko::GekkoCore();
-						Gekko::Gekko = core;
+						Gekko::Gekko = core;		// Required by recompiler static members.
 						core->Suspend();
 
 						// Initialize the memory model (flat Dolphin OS) and set initial register values.
@@ -912,7 +912,7 @@ namespace GekkoCoreUnitTest
 						SetupDolphinOSMemoryModel(core);
 						PrepareContext(core, before);
 
-						// Execute the instruction in interpreter mode.
+						// Execute the instruction in recompiler mode.
 
 						DispatchAsRecompiler(core, instr, param, notes);
 
