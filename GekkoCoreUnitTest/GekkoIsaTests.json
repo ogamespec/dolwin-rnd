@@ -76,7 +76,7 @@
 		{
 			"instr": "add.",
 			"param": [ "r1", "r2", "r3" ],
-			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 0.",
+			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 0",
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },
@@ -93,7 +93,7 @@
 		{
 			"instr": "add.",
 			"param": [ "r1", "r2", "r3" ],
-			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 1.",
+			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 1",
 			"before": [
 				{ "pc": "#80000000" },
 				{ "r1": "#ff" },

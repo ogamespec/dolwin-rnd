@@ -15,6 +15,7 @@
 #include "../../dolwin/SRC/Common/Thread.h"
 #include "../../dolwin/SRC/Common/Json.h"
 #include "../../dolwin/SRC/Common/Jdi.h"
+#include "../../dolwin/SRC/Common/String.h"
 
 #include "../../dolwin/SRC/GekkoCore/Gekko.h"
 #include "../../dolwin/SRC/GekkoCore/GekkoDisasm.h"
