@@ -794,7 +794,7 @@ namespace GekkoCoreUnitTest
 			}
 		}
 
-		TEST_METHOD(GekkoISATest)
+		void GekkoISATestMain(const char * rulesJson)
 		{
 			// Load JSON with the rules.
 
@@ -803,7 +803,7 @@ namespace GekkoCoreUnitTest
 			std::vector<uint8_t> text;
 			Json json;
 
-			LoadJson(std::string("GekkoIsaTests.json"), text);
+			LoadJson(std::string(rulesJson), text);
 			json.Deserialize(text.data(), text.size());
 
 			SetCWDToDolwin();
@@ -942,6 +942,61 @@ namespace GekkoCoreUnitTest
 					}
 				}
 			}
+		}
+
+		TEST_METHOD(GekkoISATest_AddSub)
+		{
+			GekkoISATestMain("GekkoIsaTests_AddSub.json");
+		}
+
+		TEST_METHOD(GekkoISATest_MulDiv)
+		{
+			GekkoISATestMain("GekkoIsaTests_MulDiv.json");
+		}
+
+		TEST_METHOD(GekkoISATest_Compare)
+		{
+			GekkoISATestMain("GekkoIsaTests_Compare.json");
+		}
+
+		TEST_METHOD(GekkoISATest_Logic)
+		{
+			GekkoISATestMain("GekkoIsaTests_Logic.json");
+		}
+
+		TEST_METHOD(GekkoISATest_RotateShift)
+		{
+			GekkoISATestMain("GekkoIsaTests_RotateShift.json");
+		}
+
+		TEST_METHOD(GekkoISATest_CROps)
+		{
+			GekkoISATestMain("GekkoIsaTests_CROps.json");
+		}
+
+		TEST_METHOD(GekkoISATest_LoadStore)
+		{
+			GekkoISATestMain("GekkoIsaTests_LoadStore.json");
+		}
+
+		TEST_METHOD(GekkoISATest_Fpu)
+		{
+			GekkoISATestMain("GekkoIsaTests_Fpu.json");
+		}
+
+		TEST_METHOD(GekkoISATest_PSLoadStore)
+		{
+			GekkoISATestMain("GekkoIsaTests_PSLoadStore.json");
+		}
+
+		TEST_METHOD(GekkoISATest_PS)
+		{
+			GekkoISATestMain("GekkoIsaTests_PS.json");
+		}
+
+		TEST_METHOD(GekkoISATest_Branch)
+		{
+			GekkoISATestMain("GekkoIsaTests_Branch.json");
 		}
 
 #pragma endregion "GekkoISA Tests"

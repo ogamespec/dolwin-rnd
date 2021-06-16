@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="JSON Rules">
+      <UniqueIdentifier>{f5731a23-8b96-4dd0-bd28-768ca2aceb8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GekkoCoreUnitTest.cpp">
@@ -35,6 +38,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.md" />
-    <None Include="GekkoIsaTests.json" />
+    <None Include="GekkoIsaTests_AddSub.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_Branch.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_Compare.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_CROps.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_Fpu.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_LoadStore.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_Logic.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_MulDiv.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_PS.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_PSLoadStore.json">
+      <Filter>JSON Rules</Filter>
+    </None>
+    <None Include="GekkoIsaTests_RotateShift.json">
+      <Filter>JSON Rules</Filter>
+    </None>
   </ItemGroup>
 </Project>

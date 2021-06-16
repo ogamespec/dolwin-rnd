@@ -1,8 +1,7 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. The `rules` section contains rules for registers before testing and expected values after testing.",
-		"description2": "First the execution is done in interpreter mode and the result values are compared with the `expected` values. Then a similar test is performed in recompiler mode."
+		"description": "Gekko ISA testing rules. Integer Arithmetic Instructions (Add/Sub)"
 	},
 
 	"rules":

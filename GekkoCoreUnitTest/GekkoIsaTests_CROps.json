@@ -1,0 +1,12 @@
+{
+	"info":
+	{
+		"description": "Gekko ISA testing rules. Condition Register Logical Instructions"
+	},
+
+	"rules":
+	[
+
+	]
+
+}

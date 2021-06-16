@@ -170,7 +170,17 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GekkoIsaTests.json" />
+    <None Include="GekkoIsaTests_AddSub.json" />
+    <None Include="GekkoIsaTests_Branch.json" />
+    <None Include="GekkoIsaTests_Compare.json" />
+    <None Include="GekkoIsaTests_CROps.json" />
+    <None Include="GekkoIsaTests_Fpu.json" />
+    <None Include="GekkoIsaTests_LoadStore.json" />
+    <None Include="GekkoIsaTests_Logic.json" />
+    <None Include="GekkoIsaTests_MulDiv.json" />
+    <None Include="GekkoIsaTests_PS.json" />
+    <None Include="GekkoIsaTests_PSLoadStore.json" />
+    <None Include="GekkoIsaTests_RotateShift.json" />
     <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>

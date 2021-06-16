@@ -1,0 +1,12 @@
+{
+	"info":
+	{
+		"description": "Gekko ISA testing rules. Paired-Single Load and Store Instructions"
+	},
+
+	"rules":
+	[
+
+	]
+
+}
