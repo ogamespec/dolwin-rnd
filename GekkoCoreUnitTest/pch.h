@@ -20,6 +20,7 @@
 #include "../../dolwin/SRC/GekkoCore/Gekko.h"
 #include "../../dolwin/SRC/GekkoCore/GekkoDisasm.h"
 #include "../../dolwin/SRC/GekkoCore/GekkoAssembler.h"
+#include "../../dolwin/SRC/GekkoCore/Interpreter.h"
 
 #include "../../dolwin/SRC/Hardware/HWConfig.h"
 #include "../../dolwin/SRC/Hardware/PI.h"

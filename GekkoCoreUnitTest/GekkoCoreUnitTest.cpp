@@ -86,7 +86,28 @@ namespace GekkoCoreUnitTest
 
 		void SetupDolphinOSMemoryModel(Gekko::GekkoCore* core)
 		{
-
+			for (int sr = 0; sr < 16; sr++)
+			{
+				core->regs.sr[sr] = 0x80000000;
+			}
+			// DBATs
+			core->regs.spr[Gekko::SPR::DBAT0U] = 0x80001fff; core->regs.spr[Gekko::SPR::DBAT0L] = 0x00000002;   // 0x80000000, 256mb, Write-back cached
+			core->regs.spr[Gekko::SPR::DBAT1U] = 0xc0001fff; core->regs.spr[Gekko::SPR::DBAT1L] = 0x0000002a;   // 0xC0000000, 256mb, Cache inhibited, Guarded
+			core->regs.spr[Gekko::SPR::DBAT2U] = 0x00000000; core->regs.spr[Gekko::SPR::DBAT2L] = 0x00000000;   // undefined
+			core->regs.spr[Gekko::SPR::DBAT3U] = 0x00000000; core->regs.spr[Gekko::SPR::DBAT3L] = 0x00000000;   // undefined
+			// IBATs
+			core->regs.spr[Gekko::SPR::IBAT0U] = core->regs.spr[Gekko::SPR::DBAT0U];
+			core->regs.spr[Gekko::SPR::IBAT0L] = core->regs.spr[Gekko::SPR::DBAT0L];
+			core->regs.spr[Gekko::SPR::IBAT1U] = core->regs.spr[Gekko::SPR::DBAT1U];
+			core->regs.spr[Gekko::SPR::IBAT1L] = core->regs.spr[Gekko::SPR::DBAT1L];
+			core->regs.spr[Gekko::SPR::IBAT2U] = core->regs.spr[Gekko::SPR::DBAT2U];
+			core->regs.spr[Gekko::SPR::IBAT2L] = core->regs.spr[Gekko::SPR::DBAT2L];
+			core->regs.spr[Gekko::SPR::IBAT3U] = core->regs.spr[Gekko::SPR::DBAT3U];
+			core->regs.spr[Gekko::SPR::IBAT3L] = core->regs.spr[Gekko::SPR::DBAT3L];
+			// MSR MMU bits
+			core->regs.msr |= (MSR_IR | MSR_DR);               // enable translation
+			// page table
+			core->regs.spr[Gekko::SPR::SDR1] = 0;
 		}
 
 #pragma endregion "MMU Tests"
@@ -120,9 +141,101 @@ namespace GekkoCoreUnitTest
 			}
 		}
 
+		uint32_t GetRegVal(Json::Value* n)
+		{
+			if (n->type == Json::ValueType::String)
+			{
+				std::string str = Util::WstringToString(n->value.AsString);
+				return strtoul(str.c_str(), nullptr, 0);
+			}
+			else if (n->type == Json::ValueType::Int)
+			{
+				return n->value.AsUint32;
+			}
+			else if (n->type == Json::ValueType::Float)
+			{
+				return (uint32_t)(int32_t)n->value.AsFloat;
+			}
+			else
+			{
+				Assert::Fail();
+			}
+		}
+
+		double GetFRegVal(Json::Value* n)
+		{
+			if (n->type == Json::ValueType::Float)
+			{
+				return (double)n->value.AsFloat;
+			}
+			else
+			{
+				Assert::Fail();
+			}
+		}
+
 		void PrepareContext(Gekko::GekkoCore* core, Json::Value* before)
 		{
+			for (auto v = before->children.begin(); v != before->children.end(); ++v)
+			{
+				Json::Value* r = (*v)->children.front();
+				std::string name = std::string(r->name);
 
+				if (name == "pc")
+				{
+					core->regs.pc = GetRegVal(r);
+				}
+
+				else if (r->name && r->name[0] == 'r')
+				{
+					core->regs.gpr[atoi(r->name + 1)] = GetRegVal(r);
+				}
+				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'f' && r->name[1] == 'r')
+				{
+					core->regs.fpr[atoi(r->name + 2)].dbl = GetFRegVal(r);
+				}
+				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'p' && r->name[1] == 's')
+				{
+					core->regs.ps1[atoi(r->name + 2)].dbl = GetFRegVal(r);
+				}
+
+				else if (name == "CR0[LT]")
+				{
+					if (r->value.AsInt) core->regs.cr |= GEKKO_CR0_LT;
+					else core->regs.cr &= ~GEKKO_CR0_LT;
+				}
+				else if (name == "CR0[GT]")
+				{
+					if (r->value.AsInt) core->regs.cr |= GEKKO_CR0_GT;
+					else core->regs.cr &= ~GEKKO_CR0_GT;
+				}
+				else if (name == "CR0[EQ]")
+				{
+					if (r->value.AsInt) core->regs.cr |= GEKKO_CR0_EQ;
+					else core->regs.cr &= ~GEKKO_CR0_EQ;
+				}
+				else if (name == "CR0[SO]")
+				{
+					if (r->value.AsInt) core->regs.cr |= GEKKO_CR0_SO;
+					else core->regs.cr &= ~GEKKO_CR0_SO;
+				}
+
+				else if (name == "XER[SO]")
+				{
+					if (r->value.AsInt) core->regs.spr[Gekko::SPR::XER] |= GEKKO_XER_SO;
+					else core->regs.spr[Gekko::SPR::XER] &= ~GEKKO_XER_SO;
+				}
+				else if (name == "XER[OV]")
+				{
+					if (r->value.AsInt) core->regs.spr[Gekko::SPR::XER] |= GEKKO_XER_OV;
+					else core->regs.spr[Gekko::SPR::XER] &= ~GEKKO_XER_OV;
+				}
+				else if (name == "XER[CA]")
+				{
+					if (r->value.AsInt) core->regs.spr[Gekko::SPR::XER] |= GEKKO_XER_CA;
+					else core->regs.spr[Gekko::SPR::XER] &= ~GEKKO_XER_CA;
+				}
+			}
 		}
 
 		Gekko::Instruction StrToInstr(std::string& str)
@@ -490,9 +603,18 @@ namespace GekkoCoreUnitTest
 			else return Gekko::Instruction::Unknown;
 		}
 
-		void StrToParam(std::string& str, Gekko::Param &p, int& bits)
+		void StrToParam(Json::Value *val, Gekko::Param &p, int& bits)
 		{
-
+			if (std::string(val->name) == "r")
+			{
+				p = Gekko::Param::Reg;
+				bits = (int)val->value.AsInt;
+			}
+			else if (std::string(val->name) == "fr")
+			{
+				p = Gekko::Param::FReg;
+				bits = (int)val->value.AsInt;
+			}
 		}
 
 		void DispatchAsInterpreter(Gekko::GekkoCore* core, Json::Value* instr, Json::Value* param, Json::Value* notes)
@@ -505,12 +627,9 @@ namespace GekkoCoreUnitTest
 
 			info.instr = StrToInstr(instrName);
 
-			Json::Value* parr = param->children.front();
-
-			for (auto p = parr->children.begin(); p != parr->children.end(); ++p)
+			for (auto p = param->children.begin(); p != param->children.end(); ++p)
 			{
-				std::string pstr = Util::WstringToString((*p)->value.AsString);
-				StrToParam(pstr, info.param[info.numParam], info.paramBits[info.numParam]);
+				StrToParam((*p)->children.front(), info.param[info.numParam], info.paramBits[info.numParam]);
 				info.numParam++;
 			}
 
@@ -529,11 +648,82 @@ namespace GekkoCoreUnitTest
 			{
 				Logger::WriteMessage(("Dispatching instruction (interpreter mode): " + disassembledInstr + "\n").c_str());
 			}
+
+			// Emit instruction at `pc`
+
+			int wimg;
+			uint32_t pa = core->EffectiveToPhysical(core->regs.pc, Gekko::MmuAccess::Write, wimg);
+			Assert::IsTrue(pa != Gekko::BadAddress);
+
+			PIWriteWord(pa, info.instrBits);
+
+			// Execute a single instruction with an interpreter
+
+			core->interp->ExecuteOpcode();
 		}
 
 		void CheckContext(Gekko::GekkoCore* core, Json::Value* expected)
 		{
+			for (auto v = expected->children.begin(); v != expected->children.end(); ++v)
+			{
+				Json::Value* r = (*v)->children.front();
+				std::string name = std::string(r->name);
 
+				if (name == "pc")
+				{
+					Assert::IsTrue(core->regs.pc == GetRegVal(r));
+				}
+
+				else if (r->name && r->name[0] == 'r')
+				{
+					Assert::IsTrue(core->regs.gpr[atoi(r->name + 1)] == GetRegVal(r));
+				}
+				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'f' && r->name[1] == 'r')
+				{
+					Assert::IsTrue(core->regs.fpr[atoi(r->name + 2)].dbl == GetFRegVal(r));
+				}
+				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'p' && r->name[1] == 's')
+				{
+					Assert::IsTrue(core->regs.ps1[atoi(r->name + 2)].dbl == GetFRegVal(r));
+				}
+
+				else if (name == "CR0[LT]")
+				{
+					if (r->value.AsInt) Assert::IsTrue ( (core->regs.cr & GEKKO_CR0_LT) != 0);
+					else Assert::IsTrue ( (core->regs.cr & GEKKO_CR0_LT) == 0);
+				}
+				else if (name == "CR0[GT]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.cr & GEKKO_CR0_GT) != 0);
+					else Assert::IsTrue((core->regs.cr & GEKKO_CR0_GT) == 0);
+				}
+				else if (name == "CR0[EQ]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.cr & GEKKO_CR0_EQ) != 0);
+					else Assert::IsTrue((core->regs.cr & GEKKO_CR0_EQ) == 0);
+				}
+				else if (name == "CR0[SO]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.cr & GEKKO_CR0_SO) != 0);
+					else Assert::IsTrue((core->regs.cr & GEKKO_CR0_SO) == 0);
+				}
+
+				else if (name == "XER[SO]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_SO) != 0);
+					else Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_SO) == 0);
+				}
+				else if (name == "XER[OV]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_OV) != 0);
+					else Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_OV) == 0);
+				}
+				else if (name == "XER[CA]")
+				{
+					if (r->value.AsInt) Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_CA) != 0);
+					else Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_CA) == 0);
+				}
+			}
 		}
 
 		TEST_METHOD(GekkoISATest)

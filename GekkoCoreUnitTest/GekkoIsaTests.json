@@ -2,7 +2,7 @@
 	"info":
 	{
 		"description": "Gekko ISA testing rules. The `rules` section contains rules for registers before testing and expected values after testing.",
-		"description2": "First the execution is done in interpreter mode and the `before` values are compared with the `expected` values. Then a similar test is performed in recompiler mode."
+		"description2": "First the execution is done in interpreter mode and the result values are compared with the `expected` values. Then a similar test is performed in recompiler mode."
 	},
 
 	"rules":
@@ -10,29 +10,31 @@
 
 		{
 			"instr": "add",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#12345678" },
-				{ "r3": "#ABCDEF12" }
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x12345678" },
+				{ "r3": "0xABCDEF12" }
 			],
 			"expected": [
-				{ "r1": "#BE02458A" }
+				{ "pc": "0x80000004" },
+				{ "r1": "0xBE02458A" }
 			]
 		},
 
 		{
 			"instr": "add.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result < 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": -5 },
 				{ "r3": -6 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": -11 },
 				{ "CR0[LT]": 1 },
 				{ "XER[SO]": 0 },
@@ -41,15 +43,16 @@
 		},
 		{
 			"instr": "add.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result > 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 1 },
 				{ "r3": 2 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 3 },
 				{ "CR0[GT]": 1 },
 				{ "XER[SO]": 0 },
@@ -58,15 +61,16 @@
 		},
 		{
 			"instr": "add.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result == 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 0 },
 				{ "r3": 0 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 0 },
 				{ "CR0[EQ]": 1 },
 				{ "XER[SO]": 0 },
@@ -75,16 +79,17 @@
 		},
 		{
 			"instr": "add.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 0",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" }
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0x7fffffff" }
 			],
 			"expected": [
-				{ "r1": "#FFFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0xFFFFFFFE" },
 				{ "CR0[SO]": 0 },
 				{ "XER[SO]": 0 },
 				{ "XER[OV]": 0 }
@@ -92,17 +97,18 @@
 		},
 		{
 			"instr": "add.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result Overflow. Overflow is copied from XER[SO] <- 1",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0x7fffffff" },
 				{ "XER[SO]": 1 }
 			],
 			"expected": [
-				{ "r1": "#FFFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0xFFFFFFFE" },
 				{ "CR0[SO]": 1 },
 				{ "XER[SO]": 1 },
 				{ "XER[OV]": 0 }
@@ -111,14 +117,15 @@
 
 		{
 			"instr": "addo",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 1 },
 				{ "r3": 2 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 3 },
 				{ "XER[SO]": 0 },
 				{ "XER[OV]": 0 }
@@ -126,15 +133,16 @@
 		},
 		{
 			"instr": "addo",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" }
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0x7fffffff" }
 			],
 			"expected": [
-				{ "r1": "#FFFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0xFFFFFFFE" },
 				{ "XER[SO]": 1 },
 				{ "XER[OV]": 1 }
 			]
@@ -142,14 +150,15 @@
 
 		{
 			"instr": "addo.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 1 },
 				{ "r3": 2 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 3 },
 				{ "CR0[SO]": 0 },
 				{ "XER[SO]": 0 },
@@ -158,15 +167,16 @@
 		},
 		{
 			"instr": "addo.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" }
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0x7fffffff" }
 			],
 			"expected": [
-				{ "r1": "#FFFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0xFFFFFFFE" },
 				{ "CR0[SO]": 1 },
 				{ "XER[SO]": 1 },
 				{ "XER[OV]": 1 }
@@ -175,29 +185,31 @@
 
 		{
 			"instr": "addc",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 1 },
 				{ "r3": 2 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 3 },
 				{ "XER[CA]": 0 }
 			]
 		},
 		{
 			"instr": "addc",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Carry",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#ffffffff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0xffffffff" },
 				{ "r3": 2 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 1 },
 				{ "XER[CA]": 1 }
 			]
@@ -205,15 +217,16 @@
 
 		{
 			"instr": "addc.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result < 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": -5 },
 				{ "r3": -6 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": -11 },
 				{ "CR0[LT]": 1 },
 				{ "XER[SO]": 0 },
@@ -223,15 +236,16 @@
 		},
 		{
 			"instr": "addc.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result > 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 1 },
 				{ "r3": 2 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 3 },
 				{ "CR0[GT]": 1 },
 				{ "XER[SO]": 0 },
@@ -241,15 +255,16 @@
 		},
 		{
 			"instr": "addc.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result == 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 0 },
 				{ "r3": 0 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 0 },
 				{ "CR0[EQ]": 1 },
 				{ "XER[SO]": 0 },
@@ -259,16 +274,17 @@
 		},
 		{
 			"instr": "addc.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result Overflow. Overflow is copied from XER[SO] (0) + Carry",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" }
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0x7fffffff" }
 			],
 			"expected": [
-				{ "r1": "#FFFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0xFFFFFFFE" },
 				{ "CR0[SO]": 0 },
 				{ "XER[SO]": 0 },
 				{ "XER[OV]": 0 },
@@ -277,17 +293,18 @@
 		},
 		{
 			"instr": "addc.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result Overflow. Overflow is copied from XER[SO] (1) + Carry",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0xffffffff" },
 				{ "XER[SO]": 1 }
 			],
 			"expected": [
-				{ "r1": "#7FFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0x7FFFFFFE" },
 				{ "CR0[SO]": 1 },
 				{ "XER[SO]": 1 },
 				{ "XER[OV]": 0 },
@@ -297,14 +314,15 @@
 
 		{
 			"instr": "addco",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 1 },
 				{ "r3": 2 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 3 },
 				{ "XER[SO]": 0 },
 				{ "XER[OV]": 0 },
@@ -313,15 +331,16 @@
 		},
 		{
 			"instr": "addco",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" }
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0x7fffffff" }
 			],
 			"expected": [
-				{ "r1": "#FFFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0xFFFFFFFE" },
 				{ "XER[SO]": 1 },
 				{ "XER[OV]": 1 },
 				{ "XER[CA]": 0 }
@@ -330,15 +349,16 @@
 
 		{
 			"instr": "addco.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result < 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": -5 },
 				{ "r3": -6 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": -11 },
 				{ "CR0[LT]": 1 },
 				{ "CR0[SO]": 0 },
@@ -349,15 +369,16 @@
 		},
 		{
 			"instr": "addco.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result > 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 1 },
 				{ "r3": 2 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 3 },
 				{ "CR0[GT]": 1 },
 				{ "CR0[SO]": 0 },
@@ -368,17 +389,18 @@
 		},
 		{
 			"instr": "addco.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result == 0, no overflow",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
 				{ "r2": 0 },
 				{ "r3": 0 }
 			],
 			"expected": [
+				{ "pc": "0x80000004" },
 				{ "r1": 0 },
-				{ "CR0[GT]": 1 },
+				{ "CR0[EQ]": 1 },
 				{ "CR0[SO]": 0 },
 				{ "XER[SO]": 0 },
 				{ "XER[OV]": 0 },
@@ -387,16 +409,17 @@
 		},
 		{
 			"instr": "addco.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "Result Overflow + Carry",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" }
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0x7fffffff" }
 			],
 			"expected": [
-				{ "r1": "#FFFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0xFFFFFFFE" },
 				{ "CR0[SO]": 1 },
 				{ "XER[SO]": 1 },
 				{ "XER[OV]": 1 },
@@ -405,16 +428,17 @@
 		},
 		{
 			"instr": "addco.",
-			"param": [ "r1", "r2", "r3" ],
+			"param": [ {"r": 1}, {"r": 2}, {"r": 3} ],
 			"notes": "No Overflow, Carry",
 			"before": [
-				{ "pc": "#80000000" },
-				{ "r1": "#ff" },
-				{ "r2": "#7fffffff" },
-				{ "r3": "#7fffffff" }
+				{ "pc": "0x80000000" },
+				{ "r1": "0xff" },
+				{ "r2": "0x7fffffff" },
+				{ "r3": "0xffffffff" }
 			],
 			"expected": [
-				{ "r1": "#7FFFFFFE" },
+				{ "pc": "0x80000004" },
+				{ "r1": "0x7FFFFFFE" },
 				{ "CR0[SO]": 0 },
 				{ "XER[SO]": 0 },
 				{ "XER[OV]": 0 },
