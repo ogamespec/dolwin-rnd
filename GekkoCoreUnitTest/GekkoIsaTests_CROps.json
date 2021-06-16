@@ -1,7 +1,7 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. Condition Register Logical Instructions"
+		"description": "Gekko ISA testing rules. Condition Register Instructions"
 	},
 
 	"rules":

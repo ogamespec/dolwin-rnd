@@ -178,6 +178,46 @@ namespace GekkoCoreUnitTest
 			}
 		}
 
+		void MemSet(Gekko::GekkoCore* core, Json::Value* mem)
+		{
+			Json::Value* addr = mem->children.front();
+			Json::Value* arr = mem->children.back();
+
+			int wimg;
+			uint32_t pa = core->EffectiveToPhysical(GetRegVal(addr), Gekko::MmuAccess::Write, wimg);
+			Assert::IsTrue(pa != Gekko::BadAddress);
+
+			uint8_t* ptr = MITranslatePhysicalAddress(pa, arr->children.size());
+			Assert::IsNotNull(ptr);
+
+			for (auto i = arr->children.begin(); i != arr->children.end(); ++i)
+			{
+				PIWriteByte(pa, (*i)->value.AsUint8);
+				pa++;
+			}
+		}
+
+		void MemCmp(Gekko::GekkoCore* core, Json::Value* mem)
+		{
+			Json::Value* addr = mem->children.front();
+			Json::Value* arr = mem->children.back();
+
+			int wimg;
+			uint32_t pa = core->EffectiveToPhysical(GetRegVal(addr), Gekko::MmuAccess::Write, wimg);
+			Assert::IsTrue(pa != Gekko::BadAddress);
+
+			uint8_t* ptr = MITranslatePhysicalAddress(pa, arr->children.size());
+			Assert::IsNotNull(ptr);
+
+			for (auto i = arr->children.begin(); i != arr->children.end(); ++i)
+			{
+				uint32_t val;
+				PIReadByte(pa, &val);
+				Assert::IsTrue((*i)->value.AsUint8 == (uint8_t)val);
+				pa++;
+			}
+		}
+
 		void PrepareContext(Gekko::GekkoCore* core, Json::Value* before)
 		{
 			for (auto v = before->children.begin(); v != before->children.end(); ++v)
@@ -192,6 +232,10 @@ namespace GekkoCoreUnitTest
 				else if (name == "cr")
 				{
 					core->regs.cr = GetRegVal(r);
+				}
+				else if (name == "xer")
+				{
+					core->regs.spr[Gekko::SPR::XER] = GetRegVal(r);
 				}
 
 				else if (r->name && r->name[0] == 'r')
@@ -242,6 +286,11 @@ namespace GekkoCoreUnitTest
 				{
 					if (r->value.AsInt) core->regs.spr[Gekko::SPR::XER] |= GEKKO_XER_CA;
 					else core->regs.spr[Gekko::SPR::XER] &= ~GEKKO_XER_CA;
+				}
+
+				else if (name == "mem")
+				{
+					MemSet(core, r);
 				}
 			}
 		}
@@ -611,72 +660,88 @@ namespace GekkoCoreUnitTest
 			else return Gekko::Instruction::Unknown;
 		}
 
-		void StrToParam(Json::Value *val, Gekko::Param &p, int& bits)
+		void StrToParam(Json::Value *val, Gekko::AnalyzeInfo& info)
 		{
 			std::string name(val->name);
 
 			if (name == "r")
 			{
-				p = Gekko::Param::Reg;
-				bits = (int)val->value.AsInt;
+				info.param[info.numParam] = Gekko::Param::Reg;
+				info.paramBits[info.numParam] = (int)val->value.AsInt;
 			}
 			else if (name == "fr")
 			{
-				p = Gekko::Param::FReg;
-				bits = (int)val->value.AsInt;
+				info.param[info.numParam] = Gekko::Param::FReg;
+				info.paramBits[info.numParam] = (int)val->value.AsInt;
 			}
 			else if (name == "crb")
 			{
-				p = Gekko::Param::Crb;
-				bits = (int)val->value.AsInt;
+				info.param[info.numParam] = Gekko::Param::Crb;
+				info.paramBits[info.numParam] = (int)val->value.AsInt;
 			}
 			else if (name == "crf")
 			{
-				p = Gekko::Param::Crf;
-				bits = (int)val->value.AsInt;
+				info.param[info.numParam] = Gekko::Param::Crf;
+				info.paramBits[info.numParam] = (int)val->value.AsInt;
 			}
 			else if (name == "spr")
 			{
-				p = Gekko::Param::Spr;
-				bits = (int)val->value.AsInt;
+				info.param[info.numParam] = Gekko::Param::Spr;
+				info.paramBits[info.numParam] = (int)val->value.AsInt;
 			}
 			else if (name == "tbr")
 			{
-				p = Gekko::Param::Tbr;
-				bits = (int)val->value.AsInt;
+				info.param[info.numParam] = Gekko::Param::Tbr;
+				info.paramBits[info.numParam] = (int)val->value.AsInt;
 			}
 			else if (name == "sr")
 			{
-				p = Gekko::Param::Sr;
-				bits = (int)val->value.AsInt;
+				info.param[info.numParam] = Gekko::Param::Sr;
+				info.paramBits[info.numParam] = (int)val->value.AsInt;
 			}
 			else if (name == "FM")
 			{
-				p = Gekko::Param::FM;
-
-				if (val->type == Json::ValueType::String)
-				{
-					std::string str = Util::WstringToString(val->value.AsString);
-					bits = strtoul(str.c_str(), nullptr, 0);
-				}
-				else if (val->type == Json::ValueType::Int)
-				{
-					bits = (int)val->value.AsInt;
-				}
+				info.param[info.numParam] = Gekko::Param::FM;
+				info.paramBits[info.numParam] = GetRegVal(val);
 			}
 			else if (name == "CRM")
 			{
-				p = Gekko::Param::FM;
+				info.param[info.numParam] = Gekko::Param::CRM;
+				info.paramBits[info.numParam] = GetRegVal(val);
+			}
+			else if (name == "roffs")
+			{
+				info.param[info.numParam] = Gekko::Param::RegOffset;
 
-				if (val->type == Json::ValueType::String)
-				{
-					std::string str = Util::WstringToString(val->value.AsString);
-					bits = strtoul(str.c_str(), nullptr, 0);
-				}
-				else if (val->type == Json::ValueType::Int)
-				{
-					bits = (int)val->value.AsInt;
-				}
+				Json::Value* rval = val->children.front();
+				Json::Value* offsVal = val->children.back();
+
+				info.paramBits[info.numParam] = GetRegVal(rval);
+				info.Imm.Signed = (uint16_t)GetRegVal(offsVal);
+			}
+			else if (name == "simm")
+			{
+				info.param[info.numParam] = Gekko::Param::Simm;
+				info.Imm.Signed = (uint16_t)GetRegVal(val);
+			}
+			else if (name == "uimm")
+			{
+				info.param[info.numParam] = Gekko::Param::Uimm;
+				info.Imm.Unsigned = (uint16_t)GetRegVal(val);
+			}
+			else if (name == "num")
+			{
+				info.param[info.numParam] = Gekko::Param::Num;
+				info.paramBits[info.numParam] = GetRegVal(val);
+			}
+			else if (name == "addr")
+			{
+				info.param[info.numParam] = Gekko::Param::Address;
+				info.Imm.Address = GetRegVal(val);
+			}
+			else
+			{
+				Assert::Fail(Util::StringToWstring( std::string("Invalid parameter") + name).c_str());
 			}
 		}
 
@@ -692,7 +757,7 @@ namespace GekkoCoreUnitTest
 
 			for (auto p = param->children.begin(); p != param->children.end(); ++p)
 			{
-				StrToParam((*p)->children.front(), info.param[info.numParam], info.paramBits[info.numParam]);
+				StrToParam((*p)->children.front(), info);
 				info.numParam++;
 			}
 
@@ -751,7 +816,7 @@ namespace GekkoCoreUnitTest
 
 			for (auto p = param->children.begin(); p != param->children.end(); ++p)
 			{
-				StrToParam((*p)->children.front(), info.param[info.numParam], info.paramBits[info.numParam]);
+				StrToParam((*p)->children.front(), info);
 				info.numParam++;
 			}
 
@@ -807,6 +872,11 @@ namespace GekkoCoreUnitTest
 					sprintf_s(hexval, sizeof(hexval), "cr: 0x%08X", core->regs.cr);
 					Assert::IsTrue(core->regs.cr == GetRegVal(r), Util::StringToWstring(hexval).c_str());
 				}
+				else if (name == "xer")
+				{
+					sprintf_s(hexval, sizeof(hexval), "xer: 0x%08X", core->regs.spr[Gekko::SPR::XER]);
+					Assert::IsTrue(core->regs.spr[Gekko::SPR::XER] == GetRegVal(r), Util::StringToWstring(hexval).c_str());
+				}
 
 				else if (r->name && r->name[0] == 'r')
 				{
@@ -858,6 +928,11 @@ namespace GekkoCoreUnitTest
 				{
 					if (r->value.AsInt) Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_CA) != 0);
 					else Assert::IsTrue((core->regs.spr[Gekko::SPR::XER] & GEKKO_XER_CA) == 0);
+				}
+
+				else if (name == "mem")
+				{
+					MemCmp(core, r);
 				}
 			}
 		}
