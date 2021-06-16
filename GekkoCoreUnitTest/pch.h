@@ -17,10 +17,13 @@
 #include "../../dolwin/SRC/Common/Jdi.h"
 #include "../../dolwin/SRC/Common/String.h"
 
+#include "../../dolwin/SRC/IntelCore/IntelCore.h"
+
 #include "../../dolwin/SRC/GekkoCore/Gekko.h"
 #include "../../dolwin/SRC/GekkoCore/GekkoDisasm.h"
 #include "../../dolwin/SRC/GekkoCore/GekkoAssembler.h"
 #include "../../dolwin/SRC/GekkoCore/Interpreter.h"
+#include "../../dolwin/SRC/GekkoCore/Jitc.h"
 
 #include "../../dolwin/SRC/Hardware/HWConfig.h"
 #include "../../dolwin/SRC/Hardware/PI.h"

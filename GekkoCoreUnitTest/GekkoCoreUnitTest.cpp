@@ -1,8 +1,13 @@
-// This module contains only basic tests.
+// This module contains all GekkoCore tests.
 #include "pch.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+namespace Gekko
+{
+	extern GekkoCore* Gekko;
+}
 
 namespace GekkoCoreUnitTest
 {
@@ -130,7 +135,6 @@ namespace GekkoCoreUnitTest
 				fseek(f, 0, SEEK_SET);
 
 				jsonText = new uint8_t[jsonTextSize];
-				Assert::IsNotNull(jsonText);
 
 				fread(jsonText, 1, jsonTextSize, f);
 				fclose(f);
@@ -662,6 +666,52 @@ namespace GekkoCoreUnitTest
 			core->interp->ExecuteOpcode();
 		}
 
+		void DispatchAsRecompiler(Gekko::GekkoCore* core, Json::Value* instr, Json::Value* param, Json::Value* notes)
+		{
+			std::string instrName = Util::WstringToString(instr->value.AsString);
+
+			// Assemble the instruction
+
+			Gekko::AnalyzeInfo info = { 0 };
+
+			info.instr = StrToInstr(instrName);
+
+			for (auto p = param->children.begin(); p != param->children.end(); ++p)
+			{
+				StrToParam((*p)->children.front(), info.param[info.numParam], info.paramBits[info.numParam]);
+				info.numParam++;
+			}
+
+			Gekko::GekkoAssembler::Assemble(info);
+
+			// Output information about the current instruction.
+
+			std::string disassembledInstr = Gekko::GekkoDisasm::Disasm(core->regs.pc, &info, true, true);
+
+			if (notes)
+			{
+				std::wstring notesWstr(notes->value.AsString);
+				Logger::WriteMessage((disassembledInstr + " (" + Util::WstringToString(notesWstr) + ")\n").c_str());
+			}
+			else
+			{
+				Logger::WriteMessage((disassembledInstr + "\n").c_str());
+			}
+
+			// Emit instruction at `pc`
+
+			int wimg;
+			uint32_t pa = core->EffectiveToPhysical(core->regs.pc, Gekko::MmuAccess::Write, wimg);
+			Assert::IsTrue(pa != Gekko::BadAddress);
+
+			PIWriteWord(pa, info.instrBits);
+
+			// Execute a single instruction with recompiler
+
+			core->jitc->maxInstructions = 1;
+			core->jitc->Execute();
+		}
+
 		void CheckContext(Gekko::GekkoCore* core, Json::Value* expected)
 		{
 			for (auto v = expected->children.begin(); v != expected->children.end(); ++v)
@@ -810,7 +860,68 @@ namespace GekkoCoreUnitTest
 						delete core;
 					}
 
-					// TODO: Repeat the same in recompiler mode.
+					Logger::WriteMessage("\nDispatching instructions (recompiler mode):\n");
+
+					for (auto i = (*s)->children.begin(); i != (*s)->children.end(); ++i)
+					{
+						// Get key sections to check the next instruction
+
+						Json::Value* instr = nullptr;
+						Json::Value* param = nullptr;
+						Json::Value* notes = nullptr;
+						Json::Value* before = nullptr;
+						Json::Value* expected = nullptr;
+
+						for (auto p = (*i)->children.begin(); p != (*i)->children.end(); ++p)
+						{
+							if (std::string((*p)->name) == "instr")
+							{
+								instr = *p;
+							}
+							if (std::string((*p)->name) == "param")
+							{
+								param = *p;
+							}
+							if (std::string((*p)->name) == "notes")
+							{
+								notes = *p;
+							}
+							if (std::string((*p)->name) == "before")
+							{
+								before = *p;
+							}
+							if (std::string((*p)->name) == "expected")
+							{
+								expected = *p;
+							}
+						}
+
+						Assert::IsNotNull(instr);
+						Assert::IsNotNull(param);
+						Assert::IsNotNull(before);
+						Assert::IsNotNull(expected);
+
+						// Instantiate GekkoCore
+
+						Gekko::GekkoCore* core = new Gekko::GekkoCore();
+						Gekko::Gekko = core;
+						core->Suspend();
+
+						// Initialize the memory model (flat Dolphin OS) and set initial register values.
+
+						SetupDolphinOSMemoryModel(core);
+						PrepareContext(core, before);
+
+						// Execute the instruction in interpreter mode.
+
+						DispatchAsRecompiler(core, instr, param, notes);
+
+						// Check the registers for the expected values.
+
+						CheckContext(core, expected);
+
+						delete core;
+					}
 				}
 			}
 		}
