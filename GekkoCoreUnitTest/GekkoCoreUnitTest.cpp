@@ -189,6 +189,10 @@ namespace GekkoCoreUnitTest
 				{
 					core->regs.pc = GetRegVal(r);
 				}
+				else if (name == "cr")
+				{
+					core->regs.cr = GetRegVal(r);
+				}
 
 				else if (r->name && r->name[0] == 'r')
 				{
@@ -609,15 +613,70 @@ namespace GekkoCoreUnitTest
 
 		void StrToParam(Json::Value *val, Gekko::Param &p, int& bits)
 		{
-			if (std::string(val->name) == "r")
+			std::string name(val->name);
+
+			if (name == "r")
 			{
 				p = Gekko::Param::Reg;
 				bits = (int)val->value.AsInt;
 			}
-			else if (std::string(val->name) == "fr")
+			else if (name == "fr")
 			{
 				p = Gekko::Param::FReg;
 				bits = (int)val->value.AsInt;
+			}
+			else if (name == "crb")
+			{
+				p = Gekko::Param::Crb;
+				bits = (int)val->value.AsInt;
+			}
+			else if (name == "crf")
+			{
+				p = Gekko::Param::Crf;
+				bits = (int)val->value.AsInt;
+			}
+			else if (name == "spr")
+			{
+				p = Gekko::Param::Spr;
+				bits = (int)val->value.AsInt;
+			}
+			else if (name == "tbr")
+			{
+				p = Gekko::Param::Tbr;
+				bits = (int)val->value.AsInt;
+			}
+			else if (name == "sr")
+			{
+				p = Gekko::Param::Sr;
+				bits = (int)val->value.AsInt;
+			}
+			else if (name == "FM")
+			{
+				p = Gekko::Param::FM;
+
+				if (val->type == Json::ValueType::String)
+				{
+					std::string str = Util::WstringToString(val->value.AsString);
+					bits = strtoul(str.c_str(), nullptr, 0);
+				}
+				else if (val->type == Json::ValueType::Int)
+				{
+					bits = (int)val->value.AsInt;
+				}
+			}
+			else if (name == "CRM")
+			{
+				p = Gekko::Param::FM;
+
+				if (val->type == Json::ValueType::String)
+				{
+					std::string str = Util::WstringToString(val->value.AsString);
+					bits = strtoul(str.c_str(), nullptr, 0);
+				}
+				else if (val->type == Json::ValueType::Int)
+				{
+					bits = (int)val->value.AsInt;
+				}
 			}
 		}
 
@@ -736,15 +795,24 @@ namespace GekkoCoreUnitTest
 			{
 				Json::Value* r = (*v)->children.front();
 				std::string name = std::string(r->name);
+				char hexval[0x20];
 
 				if (name == "pc")
 				{
-					Assert::IsTrue(core->regs.pc == GetRegVal(r));
+					sprintf_s(hexval, sizeof(hexval), "pc: 0x%08X", core->regs.pc);
+					Assert::IsTrue(core->regs.pc == GetRegVal(r), Util::StringToWstring(hexval).c_str());
+				}
+				else if (name == "cr")
+				{
+					sprintf_s(hexval, sizeof(hexval), "cr: 0x%08X", core->regs.cr);
+					Assert::IsTrue(core->regs.cr == GetRegVal(r), Util::StringToWstring(hexval).c_str());
 				}
 
 				else if (r->name && r->name[0] == 'r')
 				{
-					Assert::IsTrue(core->regs.gpr[atoi(r->name + 1)] == GetRegVal(r));
+					int n = atoi(r->name + 1);
+					sprintf_s(hexval, sizeof(hexval), "r%d: 0x%08X", n, core->regs.gpr[n]);
+					Assert::IsTrue(core->regs.gpr[n] == GetRegVal(r), Util::StringToWstring(hexval).c_str());
 				}
 				else if (r->name && strlen(r->name) > 2 && r->name[0] == 'f' && r->name[1] == 'r')
 				{
