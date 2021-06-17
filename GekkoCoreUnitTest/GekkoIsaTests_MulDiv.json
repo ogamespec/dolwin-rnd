@@ -1,7 +1,9 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. Integer Arithmetic Instructions (Mul/Div)"
+		"description": "Gekko ISA testing rules. Integer Arithmetic Instructions (Mul/Div)",
+		"listMul": "mulhw, mulhw., mulhwu, mulhwu., mulli, mullw, mullw., mullwo, mullwo.",
+		"listDiv": "divw, divw., divwo, divwo., divwu, divwu., divwuo, divwuo."
 	},
 
 	"rules":

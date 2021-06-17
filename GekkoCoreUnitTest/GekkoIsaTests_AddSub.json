@@ -1,7 +1,10 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. Integer Arithmetic Instructions (Add/Sub)"
+		"description": "Gekko ISA testing rules. Integer Arithmetic Instructions (Add/Sub)",
+		"listAdd": "add, add., addo, addo., addc, addc., addco, addco., adde, adde., addeo, addeo., addi, addic, addic., addis, addme, addme., addmeo, addmeo., addze, addze., addzeo, addzeo.",
+		"listSub": "neg, neg., nego, nego., subf, subf., subfo, subfo., subfc, subfc., subfco, subfco., subfe, subfe., subfeo, subfeo., subfic, subfme, subfme., subfmeo, subfmeo., subfze, subfze., subfzeo, subfzeo.",
+		"notes": "It is likely that IBM engineers were in a narcotic trance when they figured out how many addition and subtraction instructions to add to the PowerPC architecture."
 	},
 
 	"rules":

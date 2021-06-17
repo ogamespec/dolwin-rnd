@@ -1,7 +1,8 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. Integer Logical Instructions"
+		"description": "Gekko ISA testing rules. Integer Logical Instructions",
+		"list": "and, and., andc, andc., andi., andis., cntlzw, cntlzw., eqv, eqv., extsb, extsb., extsh, extsh., nand, nand., nor, nor., or, or., orc, orc., ori, oris, xor, xor., xori, xoris"
 	},
 
 	"rules":

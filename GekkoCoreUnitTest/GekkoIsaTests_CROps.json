@@ -1,7 +1,8 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. Condition Register Instructions"
+		"description": "Gekko ISA testing rules. Condition Register Instructions",
+		"list": "crand, crandc, creqv, crnand, crnor, cror, crorc, crxor, mcrf"
 	},
 
 	"rules":

@@ -1,11 +1,203 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. Integer Compare Instructions"
+		"description": "Gekko ISA testing rules. Integer Compare Instructions",
+		"list": "cmp, cmpi, cmpl, cmpli"
 	},
 
 	"rules":
 	[
+
+		{
+			"instr": "cmp",
+			"param": [ {"crf": 0}, {"r": 0}, {"r": 1} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaa" },
+				{ "r1": "0xbb" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+		{
+			"instr": "cmp",
+			"param": [ {"crf": 0}, {"r": 0}, {"r": 1} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xbb" },
+				{ "r1": "0xaa" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 1 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+		{
+			"instr": "cmp",
+			"param": [ {"crf": 0}, {"r": 0}, {"r": 1} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaa" },
+				{ "r1": "0xaa" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 1 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+
+
+		{
+			"instr": "cmpi",
+			"param": [ {"crf": 0}, {"r": 0}, {"simm": "0xbb"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaa" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+		{
+			"instr": "cmpi",
+			"param": [ {"crf": 0}, {"r": 0}, {"simm": "0xaa"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xbb" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 1 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+		{
+			"instr": "cmpi",
+			"param": [ {"crf": 0}, {"r": 0}, {"simm": "0xaa"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaa" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 1 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+
+		{
+			"instr": "cmpl",
+			"param": [ {"crf": 0}, {"r": 0}, {"r": 1} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaaaaaaaa" },
+				{ "r1": "0xbbbbbbbb" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+		{
+			"instr": "cmpl",
+			"param": [ {"crf": 0}, {"r": 0}, {"r": 1} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xbbbbbbbb" },
+				{ "r1": "0xaaaaaaaa" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 1 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+		{
+			"instr": "cmpl",
+			"param": [ {"crf": 0}, {"r": 0}, {"r": 1} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaaaaaaaa" },
+				{ "r1": "0xaaaaaaaa" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 1 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+
+		{
+			"instr": "cmpli",
+			"param": [ {"crf": 0}, {"r": 0}, {"uimm": "0xbbbb"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaaaa" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+		{
+			"instr": "cmpli",
+			"param": [ {"crf": 0}, {"r": 0}, {"uimm": "0xaaaa"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xbbbb" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 1 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]
+		},
+		{
+			"instr": "cmpli",
+			"param": [ {"crf": 0}, {"r": 0}, {"uimm": "0xaaaa"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaaaa" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 1 },
+				{ "CR0[SO]": 0 }				
+			]
+		}
 
 	]
 
