@@ -1,11 +1,221 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. Branch Instructions"
+		"description": "Gekko ISA testing rules. Branch Instructions",
+		"list": "b, ba, bl, bla, bc, bca, bcl, bcla, bcctr, bcctrl, bclr, bclrl"
 	},
 
 	"rules":
 	[
+
+
+		{
+			"instr": "b",
+			"param": [ {"addr": "0x80010000"} ],
+			"before": [
+				{ "pc": "0x80000000" }
+			],
+			"expected": [
+				{ "pc": "0x80010000" }
+			]			
+		},
+		{
+			"instr": "ba",
+			"param": [ {"addr": "0x800"} ],
+			"before": [
+				{ "pc": "0x80000000" }
+			],
+			"expected": [
+				{ "pc": "0x800" }
+			]			
+		},
+		{
+			"instr": "bl",
+			"param": [ {"addr": "0x80010000"} ],
+			"before": [
+				{ "pc": "0x80000000" }
+			],
+			"expected": [
+				{ "pc": "0x80010000" },
+				{ "lr": "0x80000004" }
+			]			
+		},
+		{
+			"instr": "bla",
+			"param": [ {"addr": "0x800"} ],
+			"before": [
+				{ "pc": "0x80000000" }
+			],
+			"expected": [
+				{ "pc": "0x800" },
+				{ "lr": "0x80000004" }
+			]			
+		},
+
+
+		{
+			"instr": "bc",
+			"notes": "BO: 0110+, BI: 0 (Branch if CR0[LT] == 1)",
+			"param": [ {"num": "0xd"}, {"num": 0}, {"addr": "0x80000100"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" }
+			]			
+		},
+		{
+			"instr": "bc",
+			"notes": "BO: 0101+, BI: 0 (Decrement CTR and branch if CR0[LT] == 1 && CTR == 0) -- branch",
+			"param": [ {"num": "0xb"}, {"num": 0}, {"addr": "0x80000100"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "ctr": 1 },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" }
+			]			
+		},
+		{
+			"instr": "bc",
+			"notes": "BO: 0101+, BI: 0 (Decrement CTR and branch if CR0[LT] == 1 && CTR == 0) -- no branch",
+			"param": [ {"num": "0xb"}, {"num": 0}, {"addr": "0x80000100"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "ctr": 2 },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" }
+			]			
+		},
+		{
+			"instr": "bca",
+			"notes": "BO: 0110+, BI: 0 (Branch if CR0[LT] == 1)",
+			"param": [ {"num": "0xd"}, {"num": 0}, {"addr": "0x100"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x100" }
+			]			
+		},
+		{
+			"instr": "bcl",
+			"notes": "BO: 0110+, BI: 0 (Branch if CR0[LT] == 1)",
+			"param": [ {"num": "0xd"}, {"num": 0}, {"addr": "0x80000100"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" },
+				{ "lr": "0x80000004" }
+			]			
+		},
+		{
+			"instr": "bcla",
+			"notes": "BO: 0110+, BI: 0 (Branch if CR0[LT] == 1)",
+			"param": [ {"num": "0xd"}, {"num": 0}, {"addr": "0x100"} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x100" },
+				{ "lr": "0x80000004" }
+			]			
+		},
+
+
+
+		{
+			"instr": "bcctr",
+			"notes": "BO: 0110+, BI: 0 (Branch at CTR if CR0[LT] == 1)",
+			"param": [ {"num": "0xd"}, {"num": 0} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "ctr": "0x80000100" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" }
+			]			
+		},
+		{
+			"instr": "bcctrl",
+			"notes": "BO: 0110+, BI: 0 (Branch at CTR and Link if CR0[LT] == 1)",
+			"param": [ {"num": "0xd"}, {"num": 0} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "ctr": "0x80000100" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" },
+				{ "lr": "0x80000004" }
+			]			
+		},
+		{
+			"instr": "bcctr",
+			"notes": "BO: 1z1zz, BI: 0 (BCTR)",
+			"param": [ {"num": "0x14"}, {"num": 0} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "ctr": "0x80000100" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" }
+			]			
+		},
+
+
+
+		{
+			"instr": "bclr",
+			"notes": "BO: 0110+, BI: 0 (Branch at LR if CR0[LT] == 1)",
+			"param": [ {"num": "0xd"}, {"num": 0} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "lr": "0x80000100" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" }
+			]			
+		},
+		{
+			"instr": "bclrl",
+			"notes": "BO: 0110+, BI: 0 (Branch at LR and Link if CR0[LT] == 1)",
+			"param": [ {"num": "0xd"}, {"num": 0} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "lr": "0x80000100" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" },
+				{ "lr": "0x80000004" }
+			]			
+		},
+		{
+			"instr": "bclr",
+			"notes": "BO: 1z1zz, BI: 0 (BLR)",
+			"param": [ {"num": "0x14"}, {"num": 0} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "lr": "0x80000100" },
+				{ "CR0[LT]": 1 }
+			],
+			"expected": [
+				{ "pc": "0x80000100" }
+			]			
+		}
+
 
 	]
 

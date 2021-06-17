@@ -246,6 +246,14 @@ namespace GekkoCoreUnitTest
 				{
 					core->regs.spr[Gekko::SPR::XER] = GetRegVal(r);
 				}
+				else if (name == "lr")
+				{
+					core->regs.spr[Gekko::SPR::LR] = GetRegVal(r);
+				}
+				else if (name == "ctr")
+				{
+					core->regs.spr[Gekko::SPR::CTR] = GetRegVal(r);
+				}
 
 				else if (r->name && r->name[0] == 'r')
 				{
@@ -855,6 +863,7 @@ namespace GekkoCoreUnitTest
 			Gekko::AnalyzeInfo info = { 0 };
 
 			info.instr = StrToInstr(instrName);
+			info.pc = core->regs.pc;
 
 			for (auto p = param->children.begin(); p != param->children.end(); ++p)
 			{
@@ -914,6 +923,7 @@ namespace GekkoCoreUnitTest
 			Gekko::AnalyzeInfo info = { 0 };
 
 			info.instr = StrToInstr(instrName);
+			info.pc = core->regs.pc;
 
 			for (auto p = param->children.begin(); p != param->children.end(); ++p)
 			{
@@ -977,6 +987,16 @@ namespace GekkoCoreUnitTest
 				{
 					sprintf_s(hexval, sizeof(hexval), "xer: 0x%08X", core->regs.spr[Gekko::SPR::XER]);
 					Assert::IsTrue(core->regs.spr[Gekko::SPR::XER] == GetRegVal(r), Util::StringToWstring(hexval).c_str());
+				}
+				else if (name == "lr")
+				{
+					sprintf_s(hexval, sizeof(hexval), "lr: 0x%08X", core->regs.spr[Gekko::SPR::LR]);
+					Assert::IsTrue(core->regs.spr[Gekko::SPR::LR] == GetRegVal(r), Util::StringToWstring(hexval).c_str());
+				}
+				else if (name == "ctr")
+				{
+					sprintf_s(hexval, sizeof(hexval), "ctr: 0x%08X", core->regs.spr[Gekko::SPR::CTR]);
+					Assert::IsTrue(core->regs.spr[Gekko::SPR::CTR] == GetRegVal(r), Util::StringToWstring(hexval).c_str());
 				}
 
 				else if (r->name && r->name[0] == 'r')
