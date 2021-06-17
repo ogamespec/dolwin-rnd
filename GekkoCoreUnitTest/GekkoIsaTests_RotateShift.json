@@ -1,11 +1,258 @@
 {
 	"info":
 	{
-		"description": "Gekko ISA testing rules. Integer Rotate and Shift Instructions"
+		"description": "Gekko ISA testing rules. Integer Rotate and Shift Instructions",
+		"list": "rlwimi, rlwimi., rlwinm, rlwinm., rlwnm, rlwnm., slw, slw., sraw, sraw., srawi, srawi., srw, srw."
 	},
 
 	"rules":
 	[
+
+		{
+			"instr": "rlwimi",
+			"param": [ {"r": 0}, {"r": 1}, {"num": 8}, {"num": 24}, {"num": 31} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0x11223344" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xaabbcc11" },
+				{ "r1": "0x11223344" }
+			]			
+		},
+		{
+			"instr": "rlwimi.",
+			"param": [ {"r": 0}, {"r": 1}, {"num": 8}, {"num": 24}, {"num": 31} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0x11223344" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xaabbcc11" },
+				{ "r1": "0x11223344" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }
+			]			
+		},
+
+		{
+			"instr": "rlwinm",
+			"param": [ {"r": 0}, {"r": 1}, {"num": 4}, {"num": 0}, {"num": 27} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xabbccdd0" },
+				{ "r1": "0xaabbccdd" }
+			]			
+		},
+		{
+			"instr": "rlwinm.",
+			"param": [ {"r": 0}, {"r": 1}, {"num": 4}, {"num": 0}, {"num": 27} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xabbccdd0" },
+				{ "r1": "0xaabbccdd" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]			
+		},
+
+		{
+			"instr": "rlwnm",
+			"param": [ {"r": 0}, {"r": 1}, {"r": 2}, {"num": 0}, {"num": 27} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" },
+				{ "r2": 4 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xabbccdd0" },
+				{ "r1": "0xaabbccdd" }
+			]			
+		},
+		{
+			"instr": "rlwnm.",
+			"param": [ {"r": 0}, {"r": 1}, {"r": 2}, {"num": 0}, {"num": 27} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" },
+				{ "r2": 4 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xabbccdd0" },
+				{ "r1": "0xaabbccdd" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]			
+		},
+
+
+
+
+		{
+			"instr": "slw",
+			"param": [ {"r": 0}, {"r": 1}, {"r": 2} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" },
+				{ "r2": 4 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xabbccdd0" },
+				{ "r1": "0xaabbccdd" }
+			]			
+		},
+		{
+			"instr": "slw.",
+			"param": [ {"r": 0}, {"r": 1}, {"r": 2} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" },
+				{ "r2": 4 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xabbccdd0" },
+				{ "r1": "0xaabbccdd" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }				
+			]			
+		},
+
+		{
+			"instr": "sraw",
+			"param": [ {"r": 0}, {"r": 1}, {"r": 2} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" },
+				{ "r2": 4 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xfaabbccd" },
+				{ "r1": "0xaabbccdd" },
+				{ "XER[CA]": 1 }				
+			]			
+		},
+		{
+			"instr": "sraw.",
+			"param": [ {"r": 0}, {"r": 1}, {"r": 2} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" },
+				{ "r2": 4 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xfaabbccd" },
+				{ "r1": "0xaabbccdd" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 },
+				{ "XER[CA]": 1 }
+			]			
+		},
+
+		{
+			"instr": "srawi",
+			"param": [ {"r": 0}, {"r": 1}, {"num": 4} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xfaabbccd" },
+				{ "r1": "0xaabbccdd" },
+				{ "XER[CA]": 1 }				
+			]			
+		},
+		{
+			"instr": "srawi.",
+			"param": [ {"r": 0}, {"r": 1}, {"num": 4} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0xfaabbccd" },
+				{ "r1": "0xaabbccdd" },
+				{ "CR0[LT]": 1 },
+				{ "CR0[GT]": 0 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 },
+				{ "XER[CA]": 1 }
+			]			
+		},
+
+		{
+			"instr": "srw",
+			"param": [ {"r": 0}, {"r": 1}, {"r": 2} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" },
+				{ "r2": 4 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0x0aabbccd" },
+				{ "r1": "0xaabbccdd" }
+			]			
+		},
+		{
+			"instr": "srw.",
+			"param": [ {"r": 0}, {"r": 1}, {"r": 2} ],
+			"before": [
+				{ "pc": "0x80000000" },
+				{ "r0": "0xaabbccdd" },
+				{ "r1": "0xaabbccdd" },
+				{ "r2": 4 }
+			],
+			"expected": [
+				{ "pc": "0x80000004" },
+				{ "r0": "0x0aabbccd" },
+				{ "r1": "0xaabbccdd" },
+				{ "CR0[LT]": 0 },
+				{ "CR0[GT]": 1 },
+				{ "CR0[EQ]": 0 },
+				{ "CR0[SO]": 0 }
+			]			
+		}
 
 	]
 
