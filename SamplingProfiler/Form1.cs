@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
 using Newtonsoft.Json;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace SamplingProfiler
 {
@@ -71,23 +72,6 @@ namespace SamplingProfiler
             }
         }
 
-        private void addSymbolsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (openFileDialogMap.ShowDialog() == DialogResult.OK)
-            {
-                Jdi.CallJdi ("AddMap \"" + openFileDialogMap.FileName + "\"");
-
-                RenderSampleData(sampleData.Analyze());
-            }
-        }
-
-        private void checkVersionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string reply = Jdi.CallJdi("GetVersion");
-
-            Console.WriteLine("Version: " + reply);
-        }
-
         private void dumpSamplesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (var sample in sampleData.samples)
@@ -102,23 +86,13 @@ namespace SamplingProfiler
 
             foreach (var segment in segments)
             {
-                if (segment.Value.hits == 1)
+				if (segment.Value.hits == 1)
                     continue;
 
-                string osTimeReply = Jdi.CallJdi("OSTime 0x" + segment.Value.timeTotal.ToString("X16"));
-                OSTimeResult osTimeResult = JsonConvert.DeserializeObject<OSTimeResult>(osTimeReply);
+				TimeSpan time = TimeSpan.FromMilliseconds(segment.Value.timeTotal / 1000);
 
-                string nearestNameReply = Jdi.CallJdi("GetNearestName 0x" + segment.Key.ToString("X8"));
-                GetNearestNameResult nearestNameResult = JsonConvert.DeserializeObject<GetNearestNameResult>(nearestNameReply);
-
-                string symbolicInfo = "";
-                if (nearestNameResult.reply != null)
-                {
-                    symbolicInfo = " (" + nearestNameResult.reply.name + "+0x" + nearestNameResult.reply.offset.ToString("X") + ")";
-                }
-
-                ListViewItem item = new ListViewItem("0x" + segment.Key.ToString("X8") + symbolicInfo);
-                item.SubItems.Add(osTimeResult.reply[0]);
+                ListViewItem item = new ListViewItem("0x" + segment.Key.ToString("X8"));
+                item.SubItems.Add(time.ToString());
                 item.SubItems.Add(segment.Value.hits.ToString());
                 listView1.Items.Add(item);
             }

@@ -110,7 +110,6 @@
             this.addSymbolsToolStripMenuItem.Name = "addSymbolsToolStripMenuItem";
             this.addSymbolsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.addSymbolsToolStripMenuItem.Text = "Add symbols...";
-            this.addSymbolsToolStripMenuItem.Click += new System.EventHandler(this.addSymbolsToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -153,7 +152,6 @@
             this.checkVersionToolStripMenuItem.Name = "checkVersionToolStripMenuItem";
             this.checkVersionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.checkVersionToolStripMenuItem.Text = "Check Version";
-            this.checkVersionToolStripMenuItem.Click += new System.EventHandler(this.checkVersionToolStripMenuItem_Click);
             // 
             // openFileDialogMap
             // 
